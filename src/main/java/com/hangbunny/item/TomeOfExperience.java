@@ -75,6 +75,12 @@ public class TomeOfExperience extends Item {
 
                 user.addExperience(pointsToTransfer);
             }
+        } else {
+            // On the client side
+            // Don't swing the player's arm when the tome is empty.
+            if (!user.isSneaking() && pointsTome <= 0) {
+                return TypedActionResult.pass(stack);
+            }
         }
 
         return TypedActionResult.success(stack, world.isClient());
