@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "tomes-of-experience",
+	"version": "0.0.1",
+	"name": "Tomes of Experience",
+	"description": "Adds books that can store player XP",
+	"authors": [
+		"hanskroner"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/tomes-of-experience",
+		"sources": "https://github.com/hanskroner/tomes-of-experience",
+		"issues": "https://github.com/hanskroner/tomes-of-experience/issues"
+	},
+	"license": "MIT",
+	"icon": "assets/tomes_of_experience/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.hangbunny.TomesOfExperience"
+		]
+	},
+	"mixins": [
+		"tomes_of_experience.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.7",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
