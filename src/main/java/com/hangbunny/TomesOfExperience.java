@@ -1,6 +1,10 @@
 package com.hangbunny;
 
+import com.hangbunny.config.TomesOfExperienceConfig;
 import com.hangbunny.item.TomeOfExperience;
+
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.Item;
@@ -17,6 +21,8 @@ public class TomesOfExperience implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
     public static final Logger LOGGER = LoggerFactory.getLogger("tomes-of-experience");
 
+	public static TomesOfExperienceConfig CONFIG = new TomesOfExperienceConfig();
+
 	// Base Tome of Experience Item
 	public static final Item TomeOfExperience = new TomeOfExperience(new FabricItemSettings());
 
@@ -26,6 +32,11 @@ public class TomesOfExperience implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
+		// Configuration
+		AutoConfig.register(TomesOfExperienceConfig.class, JanksonConfigSerializer::new);
+        CONFIG = AutoConfig.getConfigHolder(TomesOfExperienceConfig.class).getConfig();
+
+		// Items
 		Registry.register(Registries.ITEM, new Identifier("tomes_of_experience", "tome_of_experience"), TomeOfExperience);
 	}
 }
