@@ -1,4 +1,7 @@
 {
     "item.tomes_of_experience.tome_of_experience": "Tome of Experience",
-    "item.tomes_of_experience.tome_of_experience.tooltip.empty": "Empty"
+    "item.tomes_of_experience.tome_of_experience.tooltip.empty": "Empty",
+
+    "text.autoconfig.tomes_of_experience.title": "Tomes Of Experience Config",
+    "text.autoconfig.tomes_of_experience.option.experience_points_capacity": "Max Experience Points in Tome"
 }
