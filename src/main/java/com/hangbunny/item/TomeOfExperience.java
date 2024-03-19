@@ -29,6 +29,15 @@ public class TomeOfExperience extends Item {
 
     @Override
     public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
+        // The initializer has made sure there's custom tags in the object.
+        NbtCompound tags = itemStack.getNbt();
+
+        int tomeExperience = tags.getInt("experience");
+        if (tomeExperience > 0) {
+            tooltip.add(Text.literal(String.format("%d points", tomeExperience)));
+            return;
+        }
+
         tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.empty"));
     }
 
