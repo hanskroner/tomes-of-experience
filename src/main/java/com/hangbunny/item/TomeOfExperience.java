@@ -17,6 +17,14 @@ public class TomeOfExperience extends Item {
     
     public TomeOfExperience(Settings settings) {
         super(settings);
+
+        // Make sure the tome has a custom tag for tracking
+        // ho many experience points are stored in it.
+        NbtCompound tags = this.getDefaultStack().getNbt();
+        if (!this.getDefaultStack().hasNbt()) {
+            tags = new NbtCompound();
+            tags.putInt("experience", 0);
+        }
     }
 
     @Override
@@ -32,12 +40,8 @@ public class TomeOfExperience extends Item {
             return TypedActionResult.pass(stack);
         }
 
-        // Make sure the tome has custom tags
+        // The initializer has made sure there's custom tags in the object.
         NbtCompound tags = stack.getNbt();
-        if (!stack.hasNbt()) {
-            tags = new NbtCompound();
-            tags.putInt("experience", 0);
-        }
 
         int pointsPlayer = ExperienceUtils.getExperiencePoints(user);
         int pointsTome = tags.getInt("experience");
