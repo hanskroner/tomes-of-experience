@@ -10,4 +10,6 @@ public class TomesOfExperienceConfig implements ConfigData {
 
     @Comment("The maximum amount of experience points a tome can hold")
     public int experience_points_capacity = 1395;
+    @Comment("The percentage of experience points the tome will convert to store")
+    public float experience_points_efficiency = 0.98F;
 }
