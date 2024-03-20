@@ -8,6 +8,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -90,6 +92,11 @@ public class TomeOfExperience extends Item {
                 stack.setNbt(tags);
 
                 user.addExperience(pointsToTransfer);
+
+                // Play a sound when getting experience points
+                float volumeMultiplier = 0.1F;
+                float pitchMultiplier = (world.random.nextFloat() - world.random.nextFloat()) * 0.35F + 0.9F;
+                world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, volumeMultiplier, pitchMultiplier);
             }
         } else {
             // On the client side
