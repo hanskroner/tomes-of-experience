@@ -55,6 +55,10 @@ public class TomeOfExperience extends Item {
             return TypedActionResult.pass(stack);
         }
 
+        // Get tome configuration
+        int capacity = TomesOfExperience.CONFIG.experience_points_capacity;
+        float efficiency = TomesOfExperience.CONFIG.experience_points_efficiency;
+
         // The initializer has made sure there's custom tags in the object.
         NbtCompound tags = stack.getNbt();
 
@@ -64,6 +68,13 @@ public class TomeOfExperience extends Item {
         if (!world.isClient) {
 
             if (user.isSneaking()) {
+                // Don't allow storing more experience points if the tome is full
+                // Don't truncate the tome to not penalize players that are tweaking
+                // the configuration values.
+                if (pointsTome >= capacity) {
+                    return TypedActionResult.pass(stack);
+                }
+
                 // Transfer a whole XP level into the tome.
 
                 // FIXME: Check player xp level isn't 0
@@ -71,10 +82,20 @@ public class TomeOfExperience extends Item {
 
                 int pointsTranferred = pointsPlayer - ExperienceUtils.getExperiencePoints(user);
 
-                float efficiency = TomesOfExperience.CONFIG.experience_points_efficiency;
                 // Apply an efficiency loss when storing experience points
                 // Using 'floor' to be biased towards losing experience points in the transfer.
-                pointsTome += (int) Math.floor(pointsTranferred * efficiency);
+                int pointsToStore = (int) Math.floor(pointsTranferred * efficiency);
+
+                // Respect the storage capacity of the tome and refund the player the
+                // experience points that couldn't be stored - after the efficiency loss.
+                if (pointsTome + pointsToStore > capacity) {
+                    int pointsToRefund = capacity - (pointsTome + pointsToStore);
+                    pointsTome = capacity;
+                    user.addExperience(pointsToRefund);
+                } else {
+                    pointsTome += pointsToStore;
+                }
+
                 tags.putInt("experience", pointsTome);
                 stack.setNbt(tags);
 
