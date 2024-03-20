@@ -2,6 +2,7 @@ package com.hangbunny.item;
 
 import java.util.List;
 
+import com.hangbunny.TomesOfExperience;
 import com.hangbunny.experience.ExperienceUtils;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -69,7 +70,11 @@ public class TomeOfExperience extends Item {
                 user.addExperienceLevels(-1);
 
                 int pointsTranferred = pointsPlayer - ExperienceUtils.getExperiencePoints(user);
-                pointsTome += pointsTranferred;
+
+                float efficiency = TomesOfExperience.CONFIG.experience_points_efficiency;
+                // Apply an efficiency loss when storing experience points
+                // Using 'floor' to be biased towards losing experience points in the transfer.
+                pointsTome += (int) Math.floor(pointsTranferred * efficiency);
                 tags.putInt("experience", pointsTome);
                 stack.setNbt(tags);
 
