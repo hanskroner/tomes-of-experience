@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.hangbunny.TomesOfExperience;
 import com.hangbunny.experience.ExperienceUtils;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -130,5 +133,19 @@ public class TomeOfExperience extends Item {
         }
 
         return TypedActionResult.success(stack, world.isClient());
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public boolean hasGlint(ItemStack itemStack) {
+        NbtCompound tags = itemStack.getNbt();
+        if (itemStack.hasNbt()) {
+            int tomeExperience = tags.getInt("experience");
+            if (tomeExperience > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
