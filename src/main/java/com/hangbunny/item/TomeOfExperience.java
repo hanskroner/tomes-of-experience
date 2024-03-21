@@ -20,21 +20,12 @@ public class TomeOfExperience extends Item {
     
     public TomeOfExperience(Settings settings) {
         super(settings);
-
-        // Make sure the tome has a custom tag for tracking
-        // ho many experience points are stored in it.
-        NbtCompound tags = this.getDefaultStack().getNbt();
-        if (!this.getDefaultStack().hasNbt()) {
-            tags = new NbtCompound();
-            tags.putInt("experience", 0);
-        }
-    }
+   }
 
     @Override
     public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
-        // The initializer has made sure there's custom tags in the object, but a check
-        // still needs to be performed to cover the case of displaying the item within
-        // the creative inventory.
+        // Check whether the tome has a custom tag for tracking
+        // how many experience points are stored in it.
         NbtCompound tags = itemStack.getNbt();
         if (itemStack.hasNbt()) {
             int tomeExperience = tags.getInt("experience");
@@ -59,8 +50,13 @@ public class TomeOfExperience extends Item {
         int capacity = TomesOfExperience.CONFIG.experience_points_capacity;
         float efficiency = TomesOfExperience.CONFIG.experience_points_efficiency;
 
-        // The initializer has made sure there's custom tags in the object.
+        // Make sure the tome has a custom tag for tracking
+        // how many experience points are stored in it.
         NbtCompound tags = stack.getNbt();
+        if (!stack.hasNbt()) {
+            tags = new NbtCompound();
+            tags.putInt("experience", 0);
+        }
 
         int pointsPlayer = ExperienceUtils.getExperiencePoints(user);
         int pointsTome = tags.getInt("experience");
