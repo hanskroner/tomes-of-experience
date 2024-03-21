@@ -122,8 +122,9 @@ public class TomeOfExperience extends Item {
             }
         } else {
             // On the client side
-            // Don't swing the player's arm when the tome is empty.
-            if (!user.isSneaking() && pointsTome <= 0) {
+            // Don't swing the player's arm when the tome is empty or full.
+            if (!user.isSneaking() && pointsTome <= 0
+                || user.isSneaking() && pointsTome >= capacity) {
                 return TypedActionResult.pass(stack);
             }
         }
