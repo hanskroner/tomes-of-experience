@@ -17,6 +17,6 @@ public class ExperienceUtils {
 		if (level ==  0) { return 0; }
 		if (level <= 16) { return (int) (Math.pow(level, 2) + 6 * level); }
 		if (level <= 31) { return (int) (2.5 * Math.pow(level, 2) - (40.5 * level) + 360); }
-		return (int) (4.5 * Math.pow(level, 2) - (162.5 * level) + 2200);
+		return (int) (4.5 * Math.pow(level, 2) - (162.5 * level) + 2220);
 	}
 }
