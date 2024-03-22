@@ -29,8 +29,7 @@ public class TomeOfExperience extends Item {
    @Override
    public ItemStack getDefaultStack() {
         ItemStack itemStack = super.getDefaultStack();
-        NbtCompound tags = itemStack.getOrCreateNbt();
-        tags.putInt("experience", 0);
+        itemStack.getOrCreateNbt().putInt("experience", 0);
 
         return itemStack;
    }
@@ -39,13 +38,11 @@ public class TomeOfExperience extends Item {
     public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
         // Check whether the tome has a custom tag for tracking
         // how many experience points are stored in it.
-        NbtCompound tags = itemStack.getNbt();
-        if (itemStack.hasNbt()) {
-            int tomeExperience = tags.getInt("experience");
-            if (tomeExperience > 0) {
-                tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.points", tomeExperience));
-                return;
-            }
+        NbtCompound tags = itemStack.getOrCreateNbt();
+        int tomeExperience = tags.getInt("experience");
+        if (tomeExperience > 0) {
+            tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.points", tomeExperience));
+            return;
         }
 
         tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.empty"));
@@ -70,13 +67,8 @@ public class TomeOfExperience extends Item {
         int capacity = TomesOfExperience.CONFIG.experience_points_capacity;
         float efficiency = TomesOfExperience.CONFIG.experience_points_efficiency;
 
-        // Make sure the tome has a custom tag for tracking
-        // how many experience points are stored in it.
-        NbtCompound tags = stack.getNbt();
-        if (!stack.hasNbt()) {
-            tags = new NbtCompound();
-            tags.putInt("experience", 0);
-        }
+        // Custom tag for tracking how many experience points are stored in the tome
+        NbtCompound tags = stack.getOrCreateNbt();
 
         int pointsPlayer = ExperienceUtils.getExperiencePoints(user);
         int pointsTome = tags.getInt("experience");
@@ -113,7 +105,6 @@ public class TomeOfExperience extends Item {
                 }
 
                 tags.putInt("experience", pointsTome);
-                stack.setNbt(tags);
 
             } else {
                 // Transfer up to 10 XP points from the tome.
@@ -131,7 +122,6 @@ public class TomeOfExperience extends Item {
 
                 pointsTome -= pointsToTransfer;
                 tags.putInt("experience", pointsTome);
-                stack.setNbt(tags);
 
                 user.addExperience(pointsToTransfer);
 
@@ -155,14 +145,8 @@ public class TomeOfExperience extends Item {
     @Override
     @Environment(EnvType.CLIENT)
     public boolean hasGlint(ItemStack itemStack) {
-        NbtCompound tags = itemStack.getNbt();
-        if (itemStack.hasNbt()) {
-            int tomeExperience = tags.getInt("experience");
-            if (tomeExperience > 0) {
-                return true;
-            }
-        }
-
-        return false;
+        NbtCompound tags = itemStack.getOrCreateNbt();
+        int tomeExperience = tags.getInt("experience");
+        return (tomeExperience > 0);
     }
 }
