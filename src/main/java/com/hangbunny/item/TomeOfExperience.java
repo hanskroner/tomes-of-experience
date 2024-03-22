@@ -34,7 +34,7 @@ public class TomeOfExperience extends Item {
         if (itemStack.hasNbt()) {
             int tomeExperience = tags.getInt("experience");
             if (tomeExperience > 0) {
-                tooltip.add(Text.literal(String.format("%d points", tomeExperience)));
+                tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.points", tomeExperience));
                 return;
             }
         }
