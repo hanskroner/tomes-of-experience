@@ -42,6 +42,15 @@ public class TomeOfExperience extends Item {
         tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.empty"));
     }
 
+    // FIXME: Set custom NBT for stacks from the Creative inventory
+    //        Haven't yest understood how to do this.
+    @Override
+    public void onCraft(ItemStack itemStack, World world, PlayerEntity player) {
+        if (world.isClient) { return; }
+
+        itemStack.getOrCreateNbt().putInt("experience", 0);
+    }
+
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
