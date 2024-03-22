@@ -57,10 +57,10 @@ public class TomeOfExperience extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand);
+        ItemStack itemStack = user.getStackInHand(hand);
         // FIXME: Split a tome off the stack
-        if (stack.getCount() > 1) {
-            return TypedActionResult.pass(stack);
+        if (itemStack.getCount() > 1) {
+            return TypedActionResult.pass(itemStack);
         }
 
         // Get tome configuration
@@ -68,7 +68,7 @@ public class TomeOfExperience extends Item {
         float efficiency = TomesOfExperience.CONFIG.experience_points_efficiency;
 
         // Custom tag for tracking how many experience points are stored in the tome
-        NbtCompound tags = stack.getOrCreateNbt();
+        NbtCompound tags = itemStack.getOrCreateNbt();
 
         int pointsPlayer = ExperienceUtils.getExperiencePoints(user);
         int pointsTome = tags.getInt("experience");
@@ -80,7 +80,7 @@ public class TomeOfExperience extends Item {
                 // Don't truncate the tome to not penalize players that are tweaking
                 // the configuration values.
                 if (pointsTome >= capacity) {
-                    return TypedActionResult.pass(stack);
+                    return TypedActionResult.pass(itemStack);
                 }
 
                 // Transfer a whole XP level into the tome.
@@ -111,7 +111,7 @@ public class TomeOfExperience extends Item {
                 int pointsToTransfer = 10;
 
                 if (pointsTome <= 0) {
-                    return TypedActionResult.pass(stack);
+                    return TypedActionResult.pass(itemStack);
                 }
 
                 // Drain the remaining XP points in the tome if it contains
@@ -135,11 +135,11 @@ public class TomeOfExperience extends Item {
             // Don't swing the player's arm when the tome is empty or full.
             if (!user.isSneaking() && pointsTome <= 0
                 || user.isSneaking() && pointsTome >= capacity) {
-                return TypedActionResult.pass(stack);
+                return TypedActionResult.pass(itemStack);
             }
         }
 
-        return TypedActionResult.success(stack, world.isClient());
+        return TypedActionResult.success(itemStack, world.isClient());
     }
 
     @Override
