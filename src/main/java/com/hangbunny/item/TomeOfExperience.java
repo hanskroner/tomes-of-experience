@@ -26,6 +26,15 @@ public class TomeOfExperience extends Item {
         super(settings.maxCount(8).rarity(Rarity.COMMON));
    }
 
+   @Override
+   public ItemStack getDefaultStack() {
+        ItemStack itemStack = super.getDefaultStack();
+        NbtCompound tags = itemStack.getOrCreateNbt();
+        tags.putInt("experience", 0);
+
+        return itemStack;
+   }
+
     @Override
     public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
         // Check whether the tome has a custom tag for tracking
@@ -42,8 +51,6 @@ public class TomeOfExperience extends Item {
         tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.empty"));
     }
 
-    // FIXME: Set custom NBT for stacks from the Creative inventory
-    //        Haven't yest understood how to do this.
     @Override
     public void onCraft(ItemStack itemStack, World world, PlayerEntity player) {
         if (world.isClient) { return; }
