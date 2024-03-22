@@ -16,13 +16,14 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class TomeOfExperience extends Item {
     
     public TomeOfExperience(Settings settings) {
-        super(settings);
+        super(settings.maxCount(8).rarity(Rarity.COMMON));
    }
 
     @Override
