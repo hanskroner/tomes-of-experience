@@ -3,6 +3,7 @@ package com.hangbunny.item;
 import java.util.List;
 
 import com.hangbunny.TomesOfExperience;
+import com.hangbunny.experience.ExperienceUtils;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,11 +44,11 @@ public abstract class BaseTomeOfExperience extends Item {
 
     // Overridden by the subclasses to control how many
     // experience points are transferred.
-    protected int pointsToTransferToTome() {
+    protected int pointsToTransferToTome(PlayerEntity user) {
         return 0;
     }
 
-    protected int pointsToTransferToPlayer() {
+    protected int pointsToTransferToPlayer(PlayerEntity user) {
         return 0;
     }
 
@@ -103,17 +104,20 @@ public abstract class BaseTomeOfExperience extends Item {
         if (!world.isClient) {
 
             if (user.isSneaking()) {
+                // Apply an efficiency loss when storing experience points.
+                // Using 'floor' to be biased towards losing experience points in the transfer.
+                int pointsToTransfer = this.pointsToTransferToTome(user);
+                int pointsToStore = this.roundingMethod(pointsToTransfer * efficiency);
+
+                // Don't try to store experience points if the user doesn't have any.
                 // Don't allow storing more experience points if the tome is full.
                 // Don't truncate the tome to not penalize players that are tweaking
                 // the configuration values.
-                if (pointsTome >= capacity) {
+                if ((ExperienceUtils.getExperiencePoints(user) <= 0)
+                    || (pointsToTransfer == 0)
+                    || (pointsTome >= capacity)) {
                     return TypedActionResult.pass(itemStack);
                 }
-
-                // Apply an efficiency loss when storing experience points.
-                // Using 'floor' to be biased towards losing experience points in the transfer.
-                int pointsToTransfer = this.pointsToTransferToTome();
-                int pointsToStore = this.roundingMethod(pointsToTransfer * efficiency);
 
                 user.addExperience(-pointsToTransfer);
 
@@ -130,11 +134,13 @@ public abstract class BaseTomeOfExperience extends Item {
                 tags.putInt(EXPERIENCE, pointsTome);
 
             } else {
-                if (pointsTome <= 0) {
+                int pointsToTransfer = this.pointsToTransferToPlayer(user);
+
+                if ((pointsTome <= 0) 
+                    || (pointsToTransfer == 0)) {
                     return TypedActionResult.pass(itemStack);
                 }
 
-                int pointsToTransfer = this.pointsToTransferToPlayer();
 
                 // Drain the remaining XP points in the tome if it contains
                 // less than the requested amount.
@@ -154,9 +160,15 @@ public abstract class BaseTomeOfExperience extends Item {
             }
         } else {
             // On the client side
-            // Don't swing the player's arm when the tome is empty or full.
-            if (!user.isSneaking() && pointsTome <= 0
-                || user.isSneaking() && pointsTome >= capacity) {
+            // Don't swing the player's arm when:
+            //   The player has no experience points
+            //   The tome is either empty or full
+            //   No experience points would be transferred in either direction
+            if ((user.isSneaking() && ExperienceUtils.getExperiencePoints(user) <= 0)
+                || (user.isSneaking() && pointsTome >= this.getCapacity())
+                || (user.isSneaking() && this.pointsToTransferToTome(user) == 0)
+                || (!user.isSneaking() && pointsTome <= 0)
+                || (!user.isSneaking() && this.pointsToTransferToPlayer(user) == 0)) {
                 return TypedActionResult.pass(itemStack);
             }
         }
