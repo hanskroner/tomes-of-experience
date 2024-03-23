@@ -89,10 +89,6 @@ public abstract class BaseTomeOfExperience extends Item {
         ItemStack itemStack = user.getStackInHand(hand);
         NbtCompound tags = itemStack.getOrCreateNbt();
 
-        // FIXME: Split a tome off the stack
-        if (itemStack.getCount() > 1) {
-            return TypedActionResult.pass(itemStack);
-        }
 
         // Get tome configuration.
         int capacity = this.getCapacity();
@@ -101,6 +97,15 @@ public abstract class BaseTomeOfExperience extends Item {
         int pointsTome = tags.getInt(EXPERIENCE);
 
         if (!world.isClient) {
+
+            // Split a tome stack if there's more than one tome
+            // in it. This mimicks the behavior of vanilla stacks.
+            if (itemStack.getCount() > 1) {
+                int splitStackSlot = user.getInventory().getEmptySlot();
+
+                ItemStack newItemStack = itemStack.split(itemStack.getCount() - 1);
+                user.getInventory().insertStack(splitStackSlot, newItemStack);
+            }
 
             if (user.isSneaking()) {
                 // Apply an efficiency loss when storing experience points.
