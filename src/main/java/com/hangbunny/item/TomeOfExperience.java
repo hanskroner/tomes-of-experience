@@ -3,6 +3,7 @@ package com.hangbunny.item;
 import java.util.List;
 
 import com.hangbunny.TomesOfExperience;
+import com.hangbunny.config.TomesOfExperienceConfig;
 import com.hangbunny.experience.ExperienceUtils;
 
 import net.fabricmc.api.EnvType;
@@ -21,6 +22,8 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class TomeOfExperience extends Item {
+
+    private static final String EXPERIENCE = "experience";
     
     public TomeOfExperience(Settings settings) {
         super(settings.maxCount(8).rarity(Rarity.COMMON));
@@ -29,7 +32,7 @@ public class TomeOfExperience extends Item {
    @Override
    public ItemStack getDefaultStack() {
         ItemStack itemStack = super.getDefaultStack();
-        itemStack.getOrCreateNbt().putInt("experience", 0);
+        itemStack.getOrCreateNbt().putInt(EXPERIENCE, 0);
 
         return itemStack;
    }
@@ -39,7 +42,7 @@ public class TomeOfExperience extends Item {
         // Check whether the tome has a custom tag for tracking
         // how many experience points are stored in it.
         NbtCompound tags = itemStack.getOrCreateNbt();
-        int tomeExperience = tags.getInt("experience");
+        int tomeExperience = tags.getInt(EXPERIENCE);
         if (tomeExperience > 0) {
             tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.points", tomeExperience));
             return;
@@ -52,7 +55,7 @@ public class TomeOfExperience extends Item {
     public void onCraft(ItemStack itemStack, World world, PlayerEntity player) {
         if (world.isClient) { return; }
 
-        itemStack.getOrCreateNbt().putInt("experience", 0);
+        itemStack.getOrCreateNbt().putInt(EXPERIENCE, 0);
     }
 
     @Override
@@ -71,7 +74,7 @@ public class TomeOfExperience extends Item {
         NbtCompound tags = itemStack.getOrCreateNbt();
 
         int pointsPlayer = ExperienceUtils.getExperiencePoints(user);
-        int pointsTome = tags.getInt("experience");
+        int pointsTome = tags.getInt(EXPERIENCE);
 
         if (!world.isClient) {
 
@@ -104,7 +107,7 @@ public class TomeOfExperience extends Item {
                     pointsTome += pointsToStore;
                 }
 
-                tags.putInt("experience", pointsTome);
+                tags.putInt(EXPERIENCE, pointsTome);
 
             } else {
                 // Transfer up to 10 XP points from the tome.
@@ -121,7 +124,7 @@ public class TomeOfExperience extends Item {
                 }
 
                 pointsTome -= pointsToTransfer;
-                tags.putInt("experience", pointsTome);
+                tags.putInt(EXPERIENCE, pointsTome);
 
                 user.addExperience(pointsToTransfer);
 
@@ -146,7 +149,7 @@ public class TomeOfExperience extends Item {
     @Environment(EnvType.CLIENT)
     public boolean hasGlint(ItemStack itemStack) {
         NbtCompound tags = itemStack.getOrCreateNbt();
-        int tomeExperience = tags.getInt("experience");
+        int tomeExperience = tags.getInt(EXPERIENCE);
         return (tomeExperience > 0);
     }
 }
