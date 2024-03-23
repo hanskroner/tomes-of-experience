@@ -2,10 +2,12 @@ package com.hangbunny.item;
 
 import java.util.List;
 
+import com.hangbunny.TomesOfExperience;
 import com.hangbunny.experience.ExperienceUtils;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -72,16 +74,47 @@ public abstract class BaseTomeOfExperience extends Item {
 
     @Override
     public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
-        // If the tome has experience points stored, show how many.
-        // Otherwise show that it's empty.
         NbtCompound tags = itemStack.getOrCreateNbt();
         int tomeExperience = tags.getInt(EXPERIENCE);
         if (tomeExperience > 0) {
-            tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.points", tomeExperience));
-            return;
+            // Lacking a 'switch' statement with range capabilities, do this
+            // instead to add flavor text to the tooltip depending on how full
+            // of experience points the tome is.
+            int percentFull = (int) Math.floor(((float) tomeExperience / this.getCapacity()) * 10);
+            switch (percentFull) {
+                case 0:
+                case 1:
+                    tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.0-20"));
+                    break;
+                case 2:
+                case 3:
+                    tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.20-40"));
+                    break;
+                case 4:
+                case 5:
+                    tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.40-60"));
+                    break;
+                case 6:
+                case 7:
+                    tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.60-80"));
+                    break;
+                case 8:
+                case 9:
+                    tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.80-100"));
+                    break; 
+                default:
+                    tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.100"));
+                    break; 
+            }
+        } else {
+            tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.0"));
         }
 
-        tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.empty"));
+        if (Screen.hasShiftDown()) {
+            tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.points", tomeExperience, this.getCapacity()));
+        }
+
+        super.appendTooltip(itemStack,world, tooltip, tooltipContext);
     }
 
     @Override
