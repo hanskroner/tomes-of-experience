@@ -4,6 +4,9 @@
     "item.tomes_of_experience.tome_of_experience.tooltip.points": "%d points",
 
     "text.autoconfig.tomes_of_experience.title": "Tomes Of Experience Config",
+    "text.autoconfig.tomes_of_experience.category.tome_of_experience": "Tome",
     "text.autoconfig.tomes_of_experience.option.experience_points_capacity": "Max Experience Points in Tome",
-    "text.autoconfig.tomes_of_experience.option.experience_points_efficiency": "Experience Point Storage Efficiency"
+    "text.autoconfig.tomes_of_experience.option.experience_points_capacity.@Tooltip": "The maximum amount of experience points a tome can hold",
+    "text.autoconfig.tomes_of_experience.option.experience_points_efficiency": "Experience Point Storage Efficiency",
+    "text.autoconfig.tomes_of_experience.option.experience_points_efficiency.@Tooltip": "The percentage of transferred experience points the tome will store"
 }

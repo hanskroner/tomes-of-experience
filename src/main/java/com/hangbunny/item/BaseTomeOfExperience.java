@@ -2,7 +2,6 @@ package com.hangbunny.item;
 
 import java.util.List;
 
-import com.hangbunny.TomesOfExperience;
 import com.hangbunny.experience.ExperienceUtils;
 
 import net.fabricmc.api.EnvType;
@@ -140,7 +139,6 @@ public abstract class BaseTomeOfExperience extends Item {
                     || (pointsToTransfer == 0)) {
                     return TypedActionResult.pass(itemStack);
                 }
-
 
                 // Drain the remaining XP points in the tome if it contains
                 // less than the requested amount.
