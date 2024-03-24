@@ -1,5 +1,11 @@
 {
+    "item.tomes_of_experience.tome_of_minor_experience": "Tome of Minor Experience",
+    "item.tomes_of_experience.tome_of_lesser_experience": "Tome of Lesser Experience",
     "item.tomes_of_experience.tome_of_experience": "Tome of Experience",
+    "item.tomes_of_experience.tome_of_greater_experience": "Tome of Greater Experience",
+    "item.tomes_of_experience.tome_of_superior_experience": "Tome of Superior Experience",
+    "item.tomes_of_experience.tome_of_major_experience": "Tome of Major Experience",
+
     "item.tomes_of_experience.tome_of_experience.tooltip.0": "Empty",
     "item.tomes_of_experience.tome_of_experience.tooltip.0-20": "Barely full",
     "item.tomes_of_experience.tome_of_experience.tooltip.20-40": "Slightly full",
@@ -10,9 +16,52 @@
     "item.tomes_of_experience.tome_of_experience.tooltip.points": "%d/%d points",
 
     "text.autoconfig.tomes_of_experience.title": "Tomes Of Experience Config",
+    "text.autoconfig.tomes_of_experience.category.minor_tome_of_experience": "Minor Tome",
+    "text.autoconfig.tomes_of_experience.category.lesser_tome_of_experience": "Lesser Tome",
     "text.autoconfig.tomes_of_experience.category.tome_of_experience": "Tome",
-    "text.autoconfig.tomes_of_experience.option.experience_points_capacity": "Max Experience Points in Tome",
-    "text.autoconfig.tomes_of_experience.option.experience_points_capacity.@Tooltip": "The maximum amount of experience points a tome can hold",
-    "text.autoconfig.tomes_of_experience.option.experience_points_efficiency": "Experience Point Storage Efficiency",
-    "text.autoconfig.tomes_of_experience.option.experience_points_efficiency.@Tooltip": "The percentage of transferred experience points the tome will store"
+    "text.autoconfig.tomes_of_experience.category.greater_tome_of_experience": "Greater Tome",
+    "text.autoconfig.tomes_of_experience.category.superior_tome_of_experience": "Superior Tome",
+    "text.autoconfig.tomes_of_experience.category.major_tome_of_experience": "Major Tome",
+
+    "text.autoconfig.tomes_of_experience.option.minor_experience_points_capacity": "Tome Capacity",
+    "text.autoconfig.tomes_of_experience.option.minor_experience_points_capacity.@Tooltip": "The maximum amount of experience points the tome can hold.",
+    "text.autoconfig.tomes_of_experience.option.minor_experience_points_efficiency": "Tome Efficiency",
+    "text.autoconfig.tomes_of_experience.option.minor_experience_points_efficiency.@Tooltip": "The percentage of transferred experience points the tome will store.",
+    "text.autoconfig.tomes_of_experience.option.minor_minimum_level": "Minimum Level",
+    "text.autoconfig.tomes_of_experience.option.minor_minimum_level.@Tooltip": "The minimum experience level required to transfer experience points to the tome.",
+
+    "text.autoconfig.tomes_of_experience.option.lesser_experience_points_capacity": "Tome Capacity",
+    "text.autoconfig.tomes_of_experience.option.lesser_experience_points_capacity.@Tooltip": "The maximum amount of experience points the tome can hold.",
+    "text.autoconfig.tomes_of_experience.option.lesser_experience_points_efficiency": "Tome Efficiency",
+    "text.autoconfig.tomes_of_experience.option.lesser_experience_points_efficiency.@Tooltip": "The percentage of transferred experience points the tome will store.",
+    "text.autoconfig.tomes_of_experience.option.lesser_minimum_level": "Minimum Level",
+    "text.autoconfig.tomes_of_experience.option.lesser_minimum_level.@Tooltip": "The minimum experience level required to transfer experience points to the tome.",
+
+    "text.autoconfig.tomes_of_experience.option.experience_points_capacity": "Tome Capacity",
+    "text.autoconfig.tomes_of_experience.option.experience_points_capacity.@Tooltip": "The maximum amount of experience points the tome can hold.",
+    "text.autoconfig.tomes_of_experience.option.experience_points_efficiency": "Tome Efficiency",
+    "text.autoconfig.tomes_of_experience.option.experience_points_efficiency.@Tooltip": "The percentage of transferred experience points the tome will store.",
+    "text.autoconfig.tomes_of_experience.option.minimum_level": "Minimum Level",
+    "text.autoconfig.tomes_of_experience.option.minimum_level.@Tooltip": "The minimum experience level required to transfer experience points to the tome.",
+
+    "text.autoconfig.tomes_of_experience.option.greater_experience_points_capacity": "Tome Capacity",
+    "text.autoconfig.tomes_of_experience.option.greater_experience_points_capacity.@Tooltip": "The maximum amount of experience points the tome can hold.",
+    "text.autoconfig.tomes_of_experience.option.greater_experience_points_efficiency": "Tome Efficiency",
+    "text.autoconfig.tomes_of_experience.option.greater_experience_points_efficiency.@Tooltip": "The percentage of transferred experience points the tome will store.",
+    "text.autoconfig.tomes_of_experience.option.greater_minimum_level": "Minimum Level",
+    "text.autoconfig.tomes_of_experience.option.greater_minimum_level.@Tooltip": "The minimum experience level required to transfer experience points to the tome.",
+
+    "text.autoconfig.tomes_of_experience.option.superior_experience_points_capacity": "Tome Capacity",
+    "text.autoconfig.tomes_of_experience.option.superior_experience_points_capacity.@Tooltip": "The maximum amount of experience points the tome can hold.",
+    "text.autoconfig.tomes_of_experience.option.superior_experience_points_efficiency": "Tome Efficiency",
+    "text.autoconfig.tomes_of_experience.option.superior_experience_points_efficiency.@Tooltip": "The percentage of transferred experience points the tome will store.",
+    "text.autoconfig.tomes_of_experience.option.superior_minimum_level": "Minimum Level",
+    "text.autoconfig.tomes_of_experience.option.superior_minimum_level.@Tooltip": "The minimum experience level required to transfer experience points to the tome.",
+
+    "text.autoconfig.tomes_of_experience.option.major_experience_points_capacity": "Tome Capacity",
+    "text.autoconfig.tomes_of_experience.option.major_experience_points_capacity.@Tooltip": "The maximum amount of experience points the tome can hold.",
+    "text.autoconfig.tomes_of_experience.option.major_experience_points_efficiency": "Tome Efficiency",
+    "text.autoconfig.tomes_of_experience.option.major_experience_points_efficiency.@Tooltip": "The percentage of transferred experience points the tome will store.",
+    "text.autoconfig.tomes_of_experience.option.major_minimum_level": "Minimum Level",
+    "text.autoconfig.tomes_of_experience.option.major_minimum_level.@Tooltip": "The minimum experience level required to transfer experience points to the tome."
 }

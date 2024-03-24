@@ -2,7 +2,6 @@ package com.hangbunny.item;
 
 import java.util.List;
 
-import com.hangbunny.TomesOfExperience;
 import com.hangbunny.experience.ExperienceUtils;
 
 import net.fabricmc.api.EnvType;
