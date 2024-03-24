@@ -42,6 +42,10 @@ public abstract class BaseTomeOfExperience extends Item {
         return 1.0F;
     }
 
+    protected int getMinimumLevel() {
+        return 0;
+    }
+
     // Overridden by the subclasses to control how many
     // experience points are transferred.
     protected int pointsToTransferToTome(PlayerEntity user) {
@@ -129,7 +133,6 @@ public abstract class BaseTomeOfExperience extends Item {
         int pointsTome = tags.getInt(EXPERIENCE);
 
         if (!world.isClient) {
-
             // Split a tome stack if there's more than one tome
             // in it. This mimicks the behavior of vanilla stacks.
             if (itemStack.getCount() > 1) {
@@ -152,6 +155,12 @@ public abstract class BaseTomeOfExperience extends Item {
                 if ((ExperienceUtils.getExperiencePoints(user) <= 0)
                     || (pointsToTransfer == 0)
                     || (pointsTome >= capacity)) {
+                    return TypedActionResult.pass(itemStack);
+                }
+
+                // Enforce the minimum experience level the player must have
+                // to be allowed to transfer experience points to the tome.
+                if (user.experienceLevel < this.getMinimumLevel()) {
                     return TypedActionResult.pass(itemStack);
                 }
 
@@ -199,9 +208,11 @@ public abstract class BaseTomeOfExperience extends Item {
             //   The player has no experience points
             //   The tome is either empty or full
             //   No experience points would be transferred in either direction
+            //   The player doesn't have the minimum experience level required by the tome
             if ((user.isSneaking() && ExperienceUtils.getExperiencePoints(user) <= 0)
                 || (user.isSneaking() && pointsTome >= this.getCapacity())
                 || (user.isSneaking() && this.pointsToTransferToTome(user) == 0)
+                || (user.isSneaking() && (user.experienceLevel < this.getMinimumLevel()))
                 || (!user.isSneaking() && pointsTome <= 0)
                 || (!user.isSneaking() && this.pointsToTransferToPlayer(user) == 0)) {
                 return TypedActionResult.pass(itemStack);
