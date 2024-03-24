@@ -23,6 +23,11 @@ public class TomeOfExperience extends BaseTomeOfExperience {
     }
 
     @Override
+    protected int getMinimumLevel() {
+        return TomesOfExperience.CONFIG.minimum_level;
+    }
+
+    @Override
     protected int pointsToTransferToTome(PlayerEntity user) {
         int currentLevel = user.experienceLevel;
         int pointsCurrentLevel = ExperienceUtils.getExperiencePoints(user) - ExperienceUtils.getExperienceForLevel(currentLevel);
