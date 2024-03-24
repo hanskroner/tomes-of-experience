@@ -1,6 +1,11 @@
 {
   "replace": false,
   "values": [
-    "tomes_of_experience:tome_of_experience"
+    "tomes_of_experience:tome_of_minor_experience",
+    "tomes_of_experience:tome_of_lesser_experience",
+    "tomes_of_experience:tome_of_experience",
+    "tomes_of_experience:tome_of_greater_experience",
+    "tomes_of_experience:tome_of_superior_experience",
+    "tomes_of_experience:tome_of_major_experience"
   ]
 }
