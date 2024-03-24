@@ -1,7 +1,12 @@
 package com.hangbunny;
 
 import com.hangbunny.config.TomesOfExperienceConfig;
+import com.hangbunny.item.TomeOfMinorExperience;
+import com.hangbunny.item.TomeOfLesserExperience;
 import com.hangbunny.item.TomeOfExperience;
+import com.hangbunny.item.TomeOfGreaterExperience;
+import com.hangbunny.item.TomeOfSuperiorExperience;
+import com.hangbunny.item.TomeOfMajorExperience;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
@@ -26,8 +31,13 @@ public class TomesOfExperience implements ModInitializer {
 
 	public static TomesOfExperienceConfig CONFIG = new TomesOfExperienceConfig();
 
-	// Base Tome of Experience Item
+	// Tomes of Experience Items
+	public static final Item TomeOfMinorExperience = new TomeOfMinorExperience(new FabricItemSettings());
+	public static final Item TomeOfLesserExperience = new TomeOfLesserExperience(new FabricItemSettings());
 	public static final Item TomeOfExperience = new TomeOfExperience(new FabricItemSettings());
+	public static final Item TomeOfGreaterExperience = new TomeOfGreaterExperience(new FabricItemSettings());
+	public static final Item TomeOfSuperiorExperience = new TomeOfSuperiorExperience(new FabricItemSettings());
+	public static final Item TomeOfMajorExperience = new TomeOfMajorExperience(new FabricItemSettings());
 
 	@Override
 	public void onInitialize() {
@@ -40,10 +50,20 @@ public class TomesOfExperience implements ModInitializer {
         CONFIG = AutoConfig.getConfigHolder(TomesOfExperienceConfig.class).getConfig();
 
 		// Items
+		Registry.register(Registries.ITEM, new Identifier("tomes_of_experience", "tome_of_minor_experience"), TomeOfMinorExperience);
+		Registry.register(Registries.ITEM, new Identifier("tomes_of_experience", "tome_of_lesser_experience"), TomeOfLesserExperience);
 		Registry.register(Registries.ITEM, new Identifier("tomes_of_experience", "tome_of_experience"), TomeOfExperience);
+		Registry.register(Registries.ITEM, new Identifier("tomes_of_experience", "tome_of_greater_experience"), TomeOfGreaterExperience);
+		Registry.register(Registries.ITEM, new Identifier("tomes_of_experience", "tome_of_superior_experience"), TomeOfSuperiorExperience);
+		Registry.register(Registries.ITEM, new Identifier("tomes_of_experience", "tome_of_major_experience"), TomeOfMajorExperience);
 
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(content -> {
+			content.add(TomeOfMinorExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
+			content.add(TomeOfLesserExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
 			content.add(TomeOfExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
+			content.add(TomeOfGreaterExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
+			content.add(TomeOfSuperiorExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
+			content.add(TomeOfMajorExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
 		});
 	}
 }
