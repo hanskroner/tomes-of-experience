@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      " L ",
+      "LBL",
+      " L "
+    ],
+    "key": {
+      "L": {
+        "item": "minecraft:lapis_lazuli"
+      },
+      "B": {
+        "item": "tomes_of_experience:tome_of_minor_experience"
+      }
+    },
+    "result": {
+      "item": "tomes_of_experience:tome_of_lesser_experience"
+    }
+  }

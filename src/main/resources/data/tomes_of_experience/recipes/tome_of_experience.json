@@ -1,11 +1,17 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-      " E ",
-      " B ",
-      "   "
+      " L ",
+      " BD",
+      " E "
     ],
     "key": {
+      "L": {
+        "item": "minecraft:leather"
+      },
+      "D": {
+        "item": "minecraft:diamond"
+      },
       "E": {
         "item": "minecraft:ender_pearl"
       },

@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "G G",
+      "TBT",
+      "GDG"
+    ],
+    "key": {
+      "G": {
+        "item": "minecraft:gold_nugget"
+      },
+      "T": {
+        "item": "minecraft:ghast_tear"
+      },
+      "D": {
+        "item": "minecraft:diamond"
+      },
+      "B": {
+        "item": "minecraft:enchanted_book"
+      }
+    },
+    "result": {
+      "item": "tomes_of_experience:tome_of_superior_experience"
+    }
+  }
