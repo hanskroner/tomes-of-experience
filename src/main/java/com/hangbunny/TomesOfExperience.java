@@ -12,12 +12,16 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemGroup.StackVisibility;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import org.slf4j.Logger;
@@ -39,6 +43,20 @@ public class TomesOfExperience implements ModInitializer {
 	public static final Item TomeOfSuperiorExperience = new TomeOfSuperiorExperience(new FabricItemSettings());
 	public static final Item TomeOfMajorExperience = new TomeOfMajorExperience(new FabricItemSettings());
 
+	// Tomes of Experience Item Group
+	private static final ItemGroup TomesOfExperienceItemGroup = FabricItemGroup.builder()
+		.icon(() -> new ItemStack(TomeOfSuperiorExperience))
+		.displayName(Text.translatable("group.tomes_of_experience.tomes_of_experience"))
+			.entries((context, entries) -> {
+				entries.add(TomeOfMinorExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
+				entries.add(TomeOfLesserExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
+				entries.add(TomeOfExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
+				entries.add(TomeOfGreaterExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
+				entries.add(TomeOfSuperiorExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
+				entries.add(TomeOfMajorExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
+		})
+		.build();
+
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -57,13 +75,7 @@ public class TomesOfExperience implements ModInitializer {
 		Registry.register(Registries.ITEM, new Identifier("tomes_of_experience", "tome_of_superior_experience"), TomeOfSuperiorExperience);
 		Registry.register(Registries.ITEM, new Identifier("tomes_of_experience", "tome_of_major_experience"), TomeOfMajorExperience);
 
-		ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(content -> {
-			content.add(TomeOfMinorExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
-			content.add(TomeOfLesserExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
-			content.add(TomeOfExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
-			content.add(TomeOfGreaterExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
-			content.add(TomeOfSuperiorExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
-			content.add(TomeOfMajorExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
-		});
+		// Item Group
+		Registry.register(Registries.ITEM_GROUP, new Identifier("tomes_of_experience", "tomes_of_experience"), TomesOfExperienceItemGroup);
 	}
 }
