@@ -63,7 +63,7 @@ public class TomesOfExperienceConfig implements ConfigData {
     public int major_experience_points_capacity = 5345;
     @ConfigEntry.Category("major_tome_of_experience")
     @ConfigEntry.Gui.Tooltip
-    public float major_experience_points_efficiency = 0.90F;
+    public float major_experience_points_efficiency = 0.95F;
     @ConfigEntry.Category("major_tome_of_experience")
     @ConfigEntry.Gui.Tooltip
     public int major_minimum_level = 20;
