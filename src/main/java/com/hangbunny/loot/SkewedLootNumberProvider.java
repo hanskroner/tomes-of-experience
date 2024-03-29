@@ -67,11 +67,11 @@ public class SkewedLootNumberProvider implements LootNumberProvider {
         float bias = this.bias.nextInt(context);
 
         float range = max - min;
-        float mid = min + range / 2.0F;
+        float mid = min + range / 2.0f;
         float unitGaussian = MathHelper.nextGaussian(context.getRandom(), mean, deviation);
         float biasFactor = (float) Math.exp(bias);
 
-        return (int) Math.round(mid + (range * (biasFactor / (biasFactor + (float) Math.exp(-unitGaussian / skew)) - 0.5F)));
+        return (int) Math.round(mid + (range * (biasFactor / (biasFactor + (float) Math.exp(-unitGaussian / skew)) - 0.5f)));
     }
 
     public Set<LootContextParameter<?>> getRequiredParameters() {

@@ -30,7 +30,7 @@ public class TomeOfMinorExperience extends BaseTomeOfExperience {
     @Override
     protected int pointsToTransferToTome(PlayerEntity user) {
         int currentLevel = user.experienceLevel;
-        int thirdOfCurrentLevel = (int) Math.ceil((ExperienceUtils.getExperienceForLevel(currentLevel + 1) - ExperienceUtils.getExperienceForLevel(currentLevel)) * 0.33F);
+        int thirdOfCurrentLevel = (int) Math.ceil((ExperienceUtils.getExperienceForLevel(currentLevel + 1) - ExperienceUtils.getExperienceForLevel(currentLevel)) * 0.33f);
         int pointsCurrentLevel = ExperienceUtils.getExperiencePoints(user) - ExperienceUtils.getExperienceForLevel(currentLevel);
 
         // Transfer a third of the points that the current level could hold.
@@ -46,7 +46,7 @@ public class TomeOfMinorExperience extends BaseTomeOfExperience {
     @Override
     protected int pointsToTransferToPlayer(PlayerEntity user) {
         int currentLevel = user.experienceLevel;
-        int thirdOfCurrentLevel = (int) Math.ceil((ExperienceUtils.getExperienceForLevel(currentLevel + 1) - ExperienceUtils.getExperienceForLevel(currentLevel)) * 0.33F);
+        int thirdOfCurrentLevel = (int) Math.ceil((ExperienceUtils.getExperienceForLevel(currentLevel + 1) - ExperienceUtils.getExperienceForLevel(currentLevel)) * 0.33f);
         int pointsTotal = ExperienceUtils.getExperiencePoints(user);
         int pointsNextLevel = ExperienceUtils.getExperienceForLevel(currentLevel + 1);
         

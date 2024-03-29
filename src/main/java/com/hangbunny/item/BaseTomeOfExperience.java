@@ -39,7 +39,7 @@ public abstract class BaseTomeOfExperience extends Item {
     }
 
     protected float getEfficiency() {
-        return 1.0F;
+        return 1.0f;
     }
 
     protected int getMinimumLevel() {
@@ -198,8 +198,8 @@ public abstract class BaseTomeOfExperience extends Item {
                 user.addExperience(pointsToTransfer);
 
                 // Play a sound when getting experience points.
-                float volumeMultiplier = 0.1F;
-                float pitchMultiplier = (world.random.nextFloat() - world.random.nextFloat()) * 0.35F + 0.9F;
+                float volumeMultiplier = 0.1f;
+                float pitchMultiplier = (world.random.nextFloat() - world.random.nextFloat()) * 0.35f + 0.9f;
                 world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, volumeMultiplier, pitchMultiplier);
             }
         } else {

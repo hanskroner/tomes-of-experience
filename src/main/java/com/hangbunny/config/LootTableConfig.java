@@ -65,10 +65,10 @@ public class LootTableConfig {
         // The distribution of experience points in the tomes is skewed towards
         // the 'min' side of the range.
         // All tomes are skewed equally.
-        final float MEAN = 0.0F;
-        final float DEVIATION = 1.2F;
-        final float SKEW = 0.7F;
-        final float BIAS = -0.8F;      
+        final float MEAN = 0.0f;
+        final float DEVIATION = 1.2f;
+        final float SKEW = 0.7f;
+        final float BIAS = -0.8f;      
 
         // Loot probabilities
         float lootChanceCommon = TomesOfExperience.CONFIG.common_loot_chance;
@@ -94,10 +94,10 @@ public class LootTableConfig {
                         .conditionally(RandomChanceLootCondition.builder(lootChanceCommon))
                         .with(ItemEntry.builder(TomesOfExperience.TomeOfMinorExperience)
                             .weight(6)
-                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0F, (float) capacityMinorTome, MEAN, DEVIATION, SKEW, BIAS))))
+                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityMinorTome, MEAN, DEVIATION, SKEW, BIAS))))
                         .with(ItemEntry.builder(TomesOfExperience.TomeOfLesserExperience)
                             .weight(4)
-                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0F, (float) capacityLesserTome, MEAN, DEVIATION, SKEW, BIAS))));
+                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityLesserTome, MEAN, DEVIATION, SKEW, BIAS))));
 
                 tableBuilder.pool(poolBuilder);
             }
@@ -112,7 +112,7 @@ public class LootTableConfig {
                         .rolls(ConstantLootNumberProvider.create(1))
                         .conditionally(RandomChanceLootCondition.builder(lootChanceUncommon))
                         .with(ItemEntry.builder(TomesOfExperience.TomeOfExperience)
-                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0F, (float) capacityTome, MEAN, DEVIATION, SKEW, BIAS))));
+                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityTome, MEAN, DEVIATION, SKEW, BIAS))));
 
                 tableBuilder.pool(poolBuilder);
             }
@@ -127,7 +127,7 @@ public class LootTableConfig {
                         .rolls(ConstantLootNumberProvider.create(1))
                         .conditionally(RandomChanceLootCondition.builder(lootChanceRare))
                         .with(ItemEntry.builder(TomesOfExperience.TomeOfGreaterExperience)
-                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0F, (float) capacityGreaterTome, MEAN, DEVIATION, SKEW, BIAS))));
+                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityGreaterTome, MEAN, DEVIATION, SKEW, BIAS))));
 
                 tableBuilder.pool(poolBuilder);
             }
@@ -143,10 +143,10 @@ public class LootTableConfig {
                         .conditionally(RandomChanceLootCondition.builder(lootChanceEpic))
                         .with(ItemEntry.builder(TomesOfExperience.TomeOfSuperiorExperience)
                             .weight(5)
-                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0F, (float) capacitySuperiorTome, MEAN, DEVIATION, SKEW, BIAS))))
+                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacitySuperiorTome, MEAN, DEVIATION, SKEW, BIAS))))
                         .with(ItemEntry.builder(TomesOfExperience.TomeOfMajorExperience)
                             .weight(1)
-                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0F, (float) capacityMajorTome, MEAN, DEVIATION, SKEW, BIAS))));
+                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityMajorTome, MEAN, DEVIATION, SKEW, BIAS))));
 
                 tableBuilder.pool(poolBuilder);
             }
