@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 
 public abstract class BaseTomeOfExperience extends Item {
 
-    private static final String EXPERIENCE = "experience";
+    public static final String EXPERIENCE = "experience";
 
     public BaseTomeOfExperience() { 
         super(new Settings());

@@ -8,6 +8,22 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 @Config.Gui.Background("minecraft:textures/block/stone.png")
 public class TomesOfExperienceConfig implements ConfigData {
 
+    @ConfigEntry.Category("general")
+    @ConfigEntry.Gui.Tooltip
+    public boolean enable_loot = true;
+    @ConfigEntry.Category("general")
+    @ConfigEntry.Gui.Tooltip
+    public float common_loot_chance = 0.10F;
+    @ConfigEntry.Category("general")
+    @ConfigEntry.Gui.Tooltip
+    public float uncommon_loot_chance = 0.07F;
+    @ConfigEntry.Category("general")
+    @ConfigEntry.Gui.Tooltip
+    public float rare_loot_chance = 0.05F;
+    @ConfigEntry.Category("general")
+    @ConfigEntry.Gui.Tooltip
+    public float epic_loot_chance = 0.01F;
+
     @ConfigEntry.Category("minor_tome_of_experience")
     @ConfigEntry.Gui.Tooltip
     public int minor_experience_points_capacity = 160;

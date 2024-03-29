@@ -1,5 +1,6 @@
 package com.hangbunny;
 
+import com.hangbunny.config.LootTableConfig;
 import com.hangbunny.config.TomesOfExperienceConfig;
 import com.hangbunny.item.TomeOfMinorExperience;
 import com.hangbunny.item.TomeOfLesserExperience;
@@ -54,7 +55,7 @@ public class TomesOfExperience implements ModInitializer {
 				entries.add(TomeOfMajorExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
 		})
 		.build();
-
+	
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -75,5 +76,8 @@ public class TomesOfExperience implements ModInitializer {
 
 		// Item Group
 		Registry.register(Registries.ITEM_GROUP, new Identifier("tomes_of_experience", "tomes_of_experience"), TomesOfExperienceItemGroup);
+
+		// Loot Tables
+		LootTableConfig.init();
 	}
 }
