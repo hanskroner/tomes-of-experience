@@ -48,7 +48,7 @@ public class TomeOfSuperiorExperience extends BaseTomeOfExperience {
         
         // Transfer as many points as needed to get to the next level, and
         // two more levels after that to go up a total of three levels.
-        int pointsToTransfer = ExperienceUtils.getExperienceForLevel(currentLevel + 1) - pointsTotal + additionalPoints;
+        int pointsToTransfer = (ExperienceUtils.getExperienceForLevel(currentLevel + 1) - pointsTotal + additionalPoints) + 1;
 
         return pointsToTransfer;
     }

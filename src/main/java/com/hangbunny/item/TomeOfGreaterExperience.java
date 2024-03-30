@@ -45,7 +45,7 @@ public class TomeOfGreaterExperience extends BaseTomeOfExperience {
         int pointsTotal = ExperienceUtils.getExperiencePoints(user);
         
         // Transfer as many points as needed to get to the next level.
-        int pointsToTransfer = ExperienceUtils.getExperienceForLevel(currentLevel + 1) - pointsTotal;
+        int pointsToTransfer = (ExperienceUtils.getExperienceForLevel(currentLevel + 1) - pointsTotal) + 1;
 
         return pointsToTransfer;
     }
