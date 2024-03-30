@@ -90,7 +90,7 @@ public class LootTableConfig {
             if (source.isBuiltin()
                     && lootContainers.contains(id)) {
                 LootPool.Builder poolBuilder = LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create(2))
+                        .rolls(ConstantLootNumberProvider.create(1))
                         .conditionally(RandomChanceLootCondition.builder(lootChanceCommon))
                         .with(ItemEntry.builder(TomesOfExperience.TomeOfMinorExperience)
                             .weight(6)
