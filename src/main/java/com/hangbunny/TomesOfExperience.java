@@ -78,6 +78,8 @@ public class TomesOfExperience implements ModInitializer {
 		Registry.register(Registries.ITEM_GROUP, new Identifier("tomes_of_experience", "tomes_of_experience"), TomesOfExperienceItemGroup);
 
 		// Loot Tables
-		LootTableConfig.init();
+		if (CONFIG.enable_loot) {
+			LootTableConfig.init();
+		}
 	}
 }
