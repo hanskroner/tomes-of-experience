@@ -2,16 +2,17 @@ package com.hangbunny.item;
 
 import java.util.List;
 
+import com.hangbunny.TomesOfExperience;
 import com.hangbunny.experience.ExperienceUtils;
+import com.hangbunny.item.component.TomeComponent;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
@@ -63,22 +64,22 @@ public abstract class BaseTomeOfExperience extends Item {
     @Override
     public ItemStack getDefaultStack() {
         ItemStack itemStack = super.getDefaultStack();
-        itemStack.getOrCreateNbt().putInt(EXPERIENCE, 0);
+        itemStack.set(TomesOfExperience.TOME_DATA, new TomeComponent(0));
 
         return itemStack;
     }
 
     @Override
-    public void onCraft(ItemStack itemStack, World world, PlayerEntity player) {
+    public void onCraft(ItemStack itemStack, World world) {
         if (world.isClient) { return; }
 
-        itemStack.getOrCreateNbt().putInt(EXPERIENCE, 0);
+        itemStack.set(TomesOfExperience.TOME_DATA, new TomeComponent(0));
     }
 
     @Override
-    public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
-        NbtCompound tags = itemStack.getOrCreateNbt();
-        int tomeExperience = tags.getInt(EXPERIENCE);
+    public void appendTooltip(ItemStack itemStack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        TomeComponent tomeComponent = itemStack.getOrDefault(TomesOfExperience.TOME_DATA, TomeComponent.DEFAULT);
+        int tomeExperience = tomeComponent.experience();
         if (tomeExperience > 0) {
             // Lacking a 'switch' statement with range capabilities, do this
             // instead to add flavor text to the tooltip depending on how full
@@ -117,24 +118,24 @@ public abstract class BaseTomeOfExperience extends Item {
             tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.points", tomeExperience, this.getCapacity()));
         }
 
-        super.appendTooltip(itemStack,world, tooltip, tooltipContext);
+        super.appendTooltip(itemStack, context, tooltip, type);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-        NbtCompound tags = itemStack.getOrCreateNbt();
 
+        TomeComponent tomeComponent = itemStack.getOrDefault(TomesOfExperience.TOME_DATA, TomeComponent.DEFAULT);
 
         // Get tome configuration.
         int capacity = this.getCapacity();
         float efficiency = this.getEfficiency();
 
-        int pointsTome = tags.getInt(EXPERIENCE);
+        int pointsTome = tomeComponent.experience();
 
         if (!world.isClient) {
             // Split a tome stack if there's more than one tome
-            // in it. This mimicks the behavior of vanilla stacks.
+            // in it. This mimics the behavior of vanilla stacks.
             if (itemStack.getCount() > 1) {
                 int splitStackSlot = user.getInventory().getEmptySlot();
 
@@ -176,7 +177,7 @@ public abstract class BaseTomeOfExperience extends Item {
                     pointsTome += pointsToStore;
                 }
 
-                tags.putInt(EXPERIENCE, pointsTome);
+                itemStack.set(TomesOfExperience.TOME_DATA, new TomeComponent(pointsTome));
 
             } else {
                 int pointsToTransfer = this.pointsToTransferToPlayer(user);
@@ -193,7 +194,7 @@ public abstract class BaseTomeOfExperience extends Item {
                 }
 
                 pointsTome -= pointsToTransfer;
-                tags.putInt(EXPERIENCE, pointsTome);
+                itemStack.set(TomesOfExperience.TOME_DATA, new TomeComponent(pointsTome));
 
                 user.addExperience(pointsToTransfer);
 
@@ -226,8 +227,8 @@ public abstract class BaseTomeOfExperience extends Item {
     @Environment(EnvType.CLIENT)
     public boolean hasGlint(ItemStack itemStack) {
         // Make the tome glint if it has experience points stored.
-        NbtCompound tags = itemStack.getOrCreateNbt();
-        int tomeExperience = tags.getInt(EXPERIENCE);
+        TomeComponent tomeComponent = itemStack.getOrDefault(TomesOfExperience.TOME_DATA, TomeComponent.DEFAULT);
+        int tomeExperience = tomeComponent.experience();
 
         return (tomeExperience > 0);
     }

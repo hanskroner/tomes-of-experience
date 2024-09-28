@@ -2,7 +2,8 @@ package com.hangbunny.loot;
 
 import java.util.Set;
 
-import com.hangbunny.item.BaseTomeOfExperience;
+import com.hangbunny.TomesOfExperience;
+import com.hangbunny.item.component.TomeComponent;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.condition.LootCondition;
@@ -12,16 +13,18 @@ import net.minecraft.loot.function.ConditionalLootFunction;
 import net.minecraft.loot.function.LootFunctionType;
 import net.minecraft.loot.function.LootFunctionTypes;
 
+import java.util.List;
+
 public class SetExperienceLootFunction extends ConditionalLootFunction {
      final SkewedLootNumberProvider experienceRange;
 
-     SetExperienceLootFunction(LootCondition[] conditions, SkewedLootNumberProvider experienceRange) {
+     protected SetExperienceLootFunction(List<LootCondition> conditions, SkewedLootNumberProvider experienceRange) {
           super(conditions);
           this.experienceRange = experienceRange;
      }
 
-     public LootFunctionType getType() {
-          return LootFunctionTypes.SET_NBT;
+     public LootFunctionType<? extends ConditionalLootFunction> getType() {
+          return LootFunctionTypes.SET_COMPONENTS;
      }
 
      public Set<LootContextParameter<?>> getRequiredParameters() {
@@ -30,7 +33,7 @@ public class SetExperienceLootFunction extends ConditionalLootFunction {
 
      public ItemStack process(ItemStack itemStack, LootContext context) {
           int experience = this.experienceRange.nextSkewedInt(context);
-          itemStack.getOrCreateNbt().putInt(BaseTomeOfExperience.EXPERIENCE, experience);
+          itemStack.set(TomesOfExperience.TOME_DATA, new TomeComponent(experience));
 
           return itemStack;
      }

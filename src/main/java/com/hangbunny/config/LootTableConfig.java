@@ -6,16 +6,17 @@ import com.hangbunny.TomesOfExperience;
 import com.hangbunny.loot.SetExperienceLootFunction;
 import com.hangbunny.loot.SkewedLootNumberProvider;
 
-import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.loot.LootPool;
+import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.util.Identifier;
+import net.minecraft.registry.RegistryKey;
 
 public class LootTableConfig {
-    protected static final List<Identifier> lootContainers = List.of(
+    protected static final List<RegistryKey<LootTable>> lootContainers = List.of(
             LootTables.ABANDONED_MINESHAFT_CHEST,
             LootTables.ANCIENT_CITY_CHEST,
             LootTables.ANCIENT_CITY_ICE_BOX_CHEST,
@@ -85,10 +86,10 @@ public class LootTableConfig {
         int capacityMajorTome = TomesOfExperience.CONFIG.major_experience_points_capacity;
 
         // Common Tomes
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
             // Only affect vanilla loot tables.
             if (source.isBuiltin()
-                    && lootContainers.contains(id)) {
+                    && lootContainers.contains(key)) {
                 LootPool.Builder poolBuilder = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1))
                         .conditionally(RandomChanceLootCondition.builder(lootChanceCommon))
@@ -104,10 +105,10 @@ public class LootTableConfig {
         });
 
         // Uncommon Tomes
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
             // Only affect vanilla loot tables.
             if (source.isBuiltin()
-                    && lootContainers.contains(id)) {
+                    && lootContainers.contains(key)) {
                 LootPool.Builder poolBuilder = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1))
                         .conditionally(RandomChanceLootCondition.builder(lootChanceUncommon))
@@ -119,10 +120,10 @@ public class LootTableConfig {
         });
 
         // Rare Tomes
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
             // Only affect vanilla loot tables.
             if (source.isBuiltin()
-                    && lootContainers.contains(id)) {
+                    && lootContainers.contains(key)) {
                 LootPool.Builder poolBuilder = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1))
                         .conditionally(RandomChanceLootCondition.builder(lootChanceRare))
@@ -134,10 +135,10 @@ public class LootTableConfig {
         });
 
         // Epic Tomes
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
             // Only affect vanilla loot tables.
             if (source.isBuiltin()
-                    && lootContainers.contains(id)) {
+                    && lootContainers.contains(key)) {
                 LootPool.Builder poolBuilder = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1))
                         .conditionally(RandomChanceLootCondition.builder(lootChanceEpic))
