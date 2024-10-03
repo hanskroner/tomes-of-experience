@@ -10,6 +10,6 @@
     "item": "minecraft:netherite_ingot"
   },
   "result": {
-    "item": "tomes_of_experience:tome_of_major_experience"
+    "id": "tomes_of_experience:tome_of_major_experience"
   }
 }
