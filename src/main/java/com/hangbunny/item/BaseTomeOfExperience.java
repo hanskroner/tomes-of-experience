@@ -3,7 +3,6 @@ package com.hangbunny.item;
 import java.util.List;
 
 import com.hangbunny.TomesOfExperience;
-import com.hangbunny.experience.ExperienceUtils;
 import com.hangbunny.item.component.TomeComponent;
 
 import net.fabricmc.api.EnvType;
@@ -13,8 +12,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -49,11 +46,11 @@ public abstract class BaseTomeOfExperience extends Item {
 
     // Overridden by the subclasses to control how many
     // experience points are transferred.
-    protected int pointsToTransferToTome(PlayerEntity user) {
+    protected int transferToTome(ItemStack tomeItemStack, PlayerEntity user) {
         return 0;
     }
 
-    protected int pointsToTransferToPlayer(PlayerEntity user) {
+    protected int transferToPlayer(ItemStack tomeItemStack, PlayerEntity user) {
         return 0;
     }
 
@@ -121,16 +118,87 @@ public abstract class BaseTomeOfExperience extends Item {
         super.appendTooltip(itemStack, context, tooltip, type);
     }
 
+    /**
+     * Removes up to the amount passed in of experience points from a tome.
+     * 
+     * Returns the amount of experience points that were delivered - which
+     * might be a different amount than those that were passed in depending
+     * on the amount of points stored in the tome.
+     * 
+     * @param tomeItemStack the tome that will lose points
+     * @param points        the amount of experience points to remove from the tome
+     * @return              the amount of experience points delivered
+     */
+    protected int removePointsFromTome(ItemStack tomeItemStack, int points) {
+        // Make sure points aren't negative.
+        if (points <= 0) { return 0; }
+
+        // Get tome configuration.
+        TomeComponent tomeComponent = tomeItemStack.getOrDefault(TomesOfExperience.TOME_DATA, TomeComponent.DEFAULT);
+        int pointsTome = tomeComponent.experience();
+
+        int pointsDelivered = 0;
+        if (points >= pointsTome) {
+            pointsDelivered = pointsTome;
+            pointsTome = 0;
+        } else {
+            pointsDelivered = points;
+            pointsTome -= points;
+        }
+
+        tomeItemStack.set(TomesOfExperience.TOME_DATA, new TomeComponent(pointsTome));
+        return pointsDelivered;
+    }
+
+    /**
+     * Add up to the amount passed in of experience points to a tome.
+     * Depending on the tome's efficiency and capacity, the amount of points
+     * stored might be different than the amount passed it.
+     * 
+     * Returns the amount of experience points that were consumed - which
+     * might be a different amount than those that were passed in.
+     * 
+     * @param tomeItemStack the tome that will receive points
+     * @param points        the amount of experience points to add to the tome
+     * @return              the amount of experience points consumed
+     */
+    protected int addPointsToTome(ItemStack tomeItemStack, int points) {
+        // Make sure points aren't negative.
+        if (points <= 0) { return 0; }
+
+        // Get tome configuration.
+        TomeComponent tomeComponent = tomeItemStack.getOrDefault(TomesOfExperience.TOME_DATA, TomeComponent.DEFAULT);
+        int capacity = this.getCapacity();
+        float efficiency = this.getEfficiency();
+        int pointsTome = tomeComponent.experience();
+
+        int pointsStored = 0;
+        int pointsConsumed = 0;
+        if (points + pointsTome >= capacity) {
+            // If there isn't enough capacity in the tome to store the requested amount,
+            // fill the tome to it's maximum capacity but ensure that the amount consumed
+            // takes into consideration the efficiency losses that apply to the stored amount.
+            pointsStored = capacity - pointsTome;
+            pointsConsumed = this.roundingMethod(pointsStored / efficiency);
+            pointsTome = capacity;
+        } else {
+            // Apply efficiency loses. Store the amount after efficiency loses, but consume
+            // the amount that was originally requested to store.
+            pointsStored = this.roundingMethod(points * efficiency);
+            pointsConsumed = points;
+            pointsTome += pointsStored;
+        }
+
+        tomeItemStack.set(TomesOfExperience.TOME_DATA, new TomeComponent(pointsTome));
+        return pointsConsumed;
+    }
+
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
 
-        TomeComponent tomeComponent = itemStack.getOrDefault(TomesOfExperience.TOME_DATA, TomeComponent.DEFAULT);
-
         // Get tome configuration.
-        int capacity = this.getCapacity();
-        float efficiency = this.getEfficiency();
-
+        TomeComponent tomeComponent = itemStack.getOrDefault(TomesOfExperience.TOME_DATA, TomeComponent.DEFAULT);
         int pointsTome = tomeComponent.experience();
 
         if (!world.isClient) {
@@ -144,64 +212,24 @@ public abstract class BaseTomeOfExperience extends Item {
             }
 
             if (user.isSneaking()) {
-                // Apply an efficiency loss when storing experience points.
-                // Using 'floor' to be biased towards losing experience points in the transfer.
-                int pointsToTransfer = this.pointsToTransferToTome(user);
-                int pointsToStore = this.roundingMethod(pointsToTransfer * efficiency);
-
-                // Don't try to store experience points if the user doesn't have any.
-                // Don't allow storing more experience points if the tome is full.
-                // Don't truncate the tome to not penalize players that are tweaking
-                // the configuration values.
-                if ((ExperienceUtils.getExperiencePoints(user) <= 0)
-                    || (pointsToTransfer == 0)
-                    || (pointsTome >= capacity)) {
-                    return TypedActionResult.pass(itemStack);
-                }
-
                 // Enforce the minimum experience level the player must have
                 // to be allowed to transfer experience points to the tome.
                 if (user.experienceLevel < this.getMinimumLevel()) {
                     return TypedActionResult.pass(itemStack);
                 }
 
-                user.addExperience(-pointsToTransfer);
+                // Transfer experience points from the player to the tome.
+                int pointsRemoved = this.transferToTome(itemStack, user);
 
-                // Respect the storage capacity of the tome and refund the player the
-                // experience points that couldn't be stored - after the efficiency loss.
-                if (pointsTome + pointsToStore > capacity) {
-                    int pointsToRefund = capacity - (pointsTome + pointsToStore);
-                    pointsTome = capacity;
-                    user.addExperience(pointsToRefund);
-                } else {
-                    pointsTome += pointsToStore;
-                }
-
-                itemStack.set(TomesOfExperience.TOME_DATA, new TomeComponent(pointsTome));
-
-            } else {
-                int pointsToTransfer = this.pointsToTransferToPlayer(user);
-
-                if ((pointsTome <= 0) 
-                    || (pointsToTransfer == 0)) {
+                if (pointsRemoved == 0) {
                     return TypedActionResult.pass(itemStack);
                 }
-
-                // Drain the remaining XP points in the tome if it contains
-                // less than the requested amount.
-                if (pointsTome < pointsToTransfer) {
-                    pointsToTransfer = pointsTome;
+            } else {
+                // Transfer experience points from the tome to the player.
+                int pointsAdded = this.transferToPlayer(itemStack, user);
+                if (pointsAdded == 0) {
+                    return TypedActionResult.pass(itemStack);
                 }
-
-                pointsTome -= pointsToTransfer;
-                itemStack.set(TomesOfExperience.TOME_DATA, new TomeComponent(pointsTome));
-
-                user.addExperience(pointsToTransfer);
-
-                // Play a sound when getting experience points.
-                float volumeMultiplier = 0.1f;
-                float pitchMultiplier = (world.random.nextFloat() - world.random.nextFloat()) * 0.35f + 0.9f;
-                world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, volumeMultiplier, pitchMultiplier);
             }
         } else {
             // On the client side
@@ -210,12 +238,16 @@ public abstract class BaseTomeOfExperience extends Item {
             //   The tome is either empty or full
             //   No experience points would be transferred in either direction
             //   The player doesn't have the minimum experience level required by the tome
-            if ((user.isSneaking() && ExperienceUtils.getExperiencePoints(user) <= 0)
+            boolean canReceivePoints = (pointsTome < this.getCapacity()) && (user.totalExperience > 0);
+            boolean canProvidePoints = (pointsTome > 0);
+            boolean playerHasPoints = (user.experienceLevel > 0) || (user.experienceProgress > 0);
+
+            if ((user.isSneaking() && !playerHasPoints)
                 || (user.isSneaking() && pointsTome >= this.getCapacity())
-                || (user.isSneaking() && this.pointsToTransferToTome(user) == 0)
+                || (user.isSneaking() && !canReceivePoints)
                 || (user.isSneaking() && (user.experienceLevel < this.getMinimumLevel()))
                 || (!user.isSneaking() && pointsTome <= 0)
-                || (!user.isSneaking() && this.pointsToTransferToPlayer(user) == 0)) {
+                || (!user.isSneaking() && !canProvidePoints)) {
                 return TypedActionResult.pass(itemStack);
             }
         }
