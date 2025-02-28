@@ -232,13 +232,15 @@ public abstract class BaseTomeOfExperience extends Item {
                 }
             }
         } else {
+            int pointsToNextLevel = user.getNextLevelExperience();
+            int pointsCurrentLevel = (int) Math.ceil(user.experienceProgress * (float)pointsToNextLevel);
             // On the client side
             // Don't swing the player's arm when:
             //   The player has no experience points
             //   The tome is either empty or full
             //   No experience points would be transferred in either direction
             //   The player doesn't have the minimum experience level required by the tome
-            boolean canReceivePoints = (pointsTome < this.getCapacity()) && (user.totalExperience > 0);
+            boolean canReceivePoints = (pointsTome < this.getCapacity()) && !(user.experienceLevel == 0 && pointsCurrentLevel == 0);
             boolean canProvidePoints = (pointsTome > 0);
             boolean playerHasPoints = (user.experienceLevel > 0) || (user.experienceProgress > 0);
 

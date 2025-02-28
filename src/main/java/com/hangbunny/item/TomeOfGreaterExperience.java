@@ -34,7 +34,13 @@ public class TomeOfGreaterExperience extends BaseTomeOfExperience {
         // Transfer all the points in the current level plus
         // a single point to go down to the previous level.
         int pointsToTransfer = pointsCurrentLevel + 1;
-        if (pointsToTransfer > user.totalExperience) { pointsToTransfer = user.totalExperience; }
+
+        // 'user.totalExperience' doesn't seem to report reliable values.
+        // Check that we're not transferring more points than the player has by
+        // checking both the level and the points in the current level.
+        if (user.experienceLevel == 0 && pointsToTransfer > pointsCurrentLevel) {
+            pointsToTransfer = pointsCurrentLevel;
+        }
 
         // Try to transfer the points to the tome and subtract the amount that
         // could be transferred from the player.
