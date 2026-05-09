@@ -31,7 +31,7 @@ public class SkewedLootNumberProvider implements LootNumberProvider {
     }
 
     public LootNumberProviderType getType() {
-        return LootNumberProviderTypes.UNIFORM;
+        return LootNumberProviderTypes.field_27922;
     }
 
     public static SkewedLootNumberProvider create(float min, float max, float mean, float deviation, float skew, float bias) {

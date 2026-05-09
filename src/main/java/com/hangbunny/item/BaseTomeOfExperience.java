@@ -22,10 +22,10 @@ public abstract class BaseTomeOfExperience extends Item {
     public static final String EXPERIENCE = "experience";
 
     public BaseTomeOfExperience() { 
-        super(new Settings());
+        super(new net.minecraft.item.Item.Settings());
     }
 
-    public BaseTomeOfExperience(Settings settings) {
+    public BaseTomeOfExperience(net.minecraft.item.Item.Settings settings) {
         super(settings);
     }
 

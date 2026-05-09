@@ -7,8 +7,8 @@ import net.minecraft.util.Rarity;
 
 public class TomeOfMinorExperience extends BaseTomeOfExperience {
 
-    public TomeOfMinorExperience(Settings settings) {
-        super(settings.maxCount(6).rarity(Rarity.COMMON));
+    public TomeOfMinorExperience(net.minecraft.item.Item.Settings settings) {
+        super(settings.maxCount(6).rarity(Rarity.field_8906));
    }
 
     @Override

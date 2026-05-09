@@ -54,12 +54,12 @@ public class TomesOfExperience implements ModInitializer {
 		.icon(() -> new ItemStack(TomeOfSuperiorExperience))
 		.displayName(Text.translatable("group.tomes_of_experience.tomes_of_experience"))
 			.entries((context, entries) -> {
-				entries.add(TomeOfMinorExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
-				entries.add(TomeOfLesserExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
-				entries.add(TomeOfExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
-				entries.add(TomeOfGreaterExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
-				entries.add(TomeOfSuperiorExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
-				entries.add(TomeOfMajorExperience.getDefaultStack(), StackVisibility.PARENT_AND_SEARCH_TABS);
+				entries.add(TomeOfMinorExperience.getDefaultStack(), StackVisibility.field_40191);
+				entries.add(TomeOfLesserExperience.getDefaultStack(), StackVisibility.field_40191);
+				entries.add(TomeOfExperience.getDefaultStack(), StackVisibility.field_40191);
+				entries.add(TomeOfGreaterExperience.getDefaultStack(), StackVisibility.field_40191);
+				entries.add(TomeOfSuperiorExperience.getDefaultStack(), StackVisibility.field_40191);
+				entries.add(TomeOfMajorExperience.getDefaultStack(), StackVisibility.field_40191);
 		})
 		.build();
 	

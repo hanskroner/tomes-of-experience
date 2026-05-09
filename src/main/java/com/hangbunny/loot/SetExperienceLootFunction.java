@@ -24,7 +24,7 @@ public class SetExperienceLootFunction extends ConditionalLootFunction {
      }
 
      public LootFunctionType<? extends ConditionalLootFunction> getType() {
-          return LootFunctionTypes.SET_COMPONENTS;
+          return LootFunctionTypes.field_49442;
      }
 
      public Set<LootContextParameter<?>> getRequiredParameters() {
