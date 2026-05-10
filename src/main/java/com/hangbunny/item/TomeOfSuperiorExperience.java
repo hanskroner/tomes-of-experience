@@ -12,7 +12,7 @@ public class TomeOfSuperiorExperience extends BaseTomeOfExperience {
    }
 
     @Override
-    protected int getCapacity() {
+    public int getCapacity() {
         return TomesOfExperience.CONFIG.superior_experience_points_capacity;
     }
 

@@ -12,7 +12,7 @@ public class TomeOfMinorExperience extends BaseTomeOfExperience {
    }
 
     @Override
-    protected int getCapacity() {
+    public int getCapacity() {
         return TomesOfExperience.CONFIG.minor_experience_points_capacity;
     }
 

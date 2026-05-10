@@ -30,7 +30,7 @@ public abstract class BaseTomeOfExperience extends Item {
     // Use accessors for configuration values.
     // This allows subclasses to override them while allowing for live
     // changes in the configuration file.
-    protected int getCapacity() {
+    public int getCapacity() {
         return 0;
     }
 
@@ -108,12 +108,6 @@ public abstract class BaseTomeOfExperience extends Item {
         } else {
             tooltip.accept(Component.translatable("item.tomes_of_experience.tome_of_experience.tooltip.0"));
         }
-
-        // FIXME: Screen is missing hasShiftDown()
-        //        Implement this later
-        // if (Screen.hasShiftDown()) {
-        //     tooltip.accept(Component.translatable("item.tomes_of_experience.tome_of_experience.tooltip.points", tomeExperience, this.getCapacity()));
-        // }
 
         super.appendHoverText(itemStack, context, display, tooltip, type);
     }

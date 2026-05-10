@@ -19,6 +19,9 @@
 		"main": [
 			"com.hangbunny.TomesOfExperience"
 		],
+		"client": [
+    		"com.hangbunny.client.TomesOfExperienceClient"
+    	],
 		"modmenu": [
 			"com.hangbunny.config.ModMenuIntegration"
 		]
