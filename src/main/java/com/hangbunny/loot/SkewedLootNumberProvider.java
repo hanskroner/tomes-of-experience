@@ -49,21 +49,6 @@ public class SkewedLootNumberProvider implements NumberProvider {
         return CODEC;
     }
 
-    // @Override
-    // public NumberProviderType getType() {
-    //     return TomesNumberProviderTypes.SKEWED;
-    // }
-
-    // FIXME: Might need to implement this class to register the custom NumberProviderType
-    //        returned in the above, commented out, method.
-    // public class TomesNumberProviderTypes {
-    // public static final NumberProviderType SKEWED = Registry.register(
-    //     BuiltInRegistries.NUMBER_PROVIDER_TYPE,
-    //     ResourceLocation.fromNamespaceAndPath("tomes_of_experience", "skewed"),
-    //     new NumberProviderType(SkewedLootNumberProvider.CODEC)
-    // );
-    // }
-
     public static SkewedLootNumberProvider create(float min, float max, float mean, float deviation, float skew, float bias) {
         return new SkewedLootNumberProvider(
             ConstantValue.exactly(min),
