@@ -23,7 +23,7 @@
     		"com.hangbunny.client.TomesOfExperienceClient"
     	],
 		"modmenu": [
-			"com.hangbunny.config.ModMenuIntegration"
+			"com.hangbunny.client.config.ModMenuIntegration"
 		]
 	},
 	"mixins": [
