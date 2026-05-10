@@ -53,9 +53,11 @@ public class TomeOfExperience extends BaseTomeOfExperience {
     @Override
     protected int transferToPlayer(ItemStack tomeItemStack, Player player) {
         int pointsToNextLevel = player.getXpNeededForNextLevel();
+        int pointsCurrentLevel = (int) Math.ceil(player.experienceProgress * (float)pointsToNextLevel);
+        int pointsNextLevel = pointsToNextLevel - pointsCurrentLevel;
 
         // Transfer as many points as needed to get to the next level.
-        int pointsToTransfer = pointsToNextLevel;
+        int pointsToTransfer = pointsNextLevel + 1;
 
         // Try to get the points from the tome - or as many as it can provide - and 
         // add that amount to the player.

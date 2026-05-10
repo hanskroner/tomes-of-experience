@@ -65,7 +65,7 @@ public class TomeOfMinorExperience extends BaseTomeOfExperience {
         // points to go up to the next level.
         int thirdOfCurrentLevel = (int) Math.ceil((float)pointsToNextLevel / 3f);
         int pointsToTransfer = thirdOfCurrentLevel > pointsNextLevel
-            ? pointsNextLevel
+            ? pointsNextLevel + 1
             : thirdOfCurrentLevel;
 
         // Try to get the points from the tome - or as many as it can provide - and 

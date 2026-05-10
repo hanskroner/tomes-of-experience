@@ -58,14 +58,14 @@ public class TomeOfLesserExperience extends BaseTomeOfExperience {
     protected int transferToPlayer(ItemStack tomeItemStack, Player player) {
         int pointsToNextLevel = player.getXpNeededForNextLevel();
         int pointsCurrentLevel = (int) Math.ceil(player.experienceProgress * (float)pointsToNextLevel);
-        int pointsNextLevel = pointsToNextLevel - pointsCurrentLevel ;
+        int pointsNextLevel = pointsToNextLevel - pointsCurrentLevel;
 
         // Transfer half of the points that the current level could hold.
         // If the transfer would cause the player to level up, just transfer enough
         // points to go up to the next level.
         int halfOfCurrentLevel = (int) Math.ceil((float)pointsToNextLevel * 0.5f);
         int pointsToTransfer = halfOfCurrentLevel > pointsNextLevel
-            ? pointsNextLevel
+            ? pointsNextLevel + 1
             : halfOfCurrentLevel;
 
         // Try to get the points from the tome - or as many as it can provide - and 

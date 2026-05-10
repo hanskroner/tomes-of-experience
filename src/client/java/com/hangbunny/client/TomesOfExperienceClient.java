@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 public class TomesOfExperienceClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
+        // Detailed tooltips when holding down Shift
         ItemTooltipCallback.EVENT.register((itemStack, context, type, lines) -> {
             if (itemStack.getItem() instanceof BaseTomeOfExperience tome) {
                 TomeComponent tomeComponent = itemStack.getOrDefault(TomesOfExperience.TOME_DATA, TomeComponent.DEFAULT);
@@ -21,5 +22,5 @@ public class TomesOfExperienceClient implements ClientModInitializer {
                 }
             }
         });
-	}
+    }
 }

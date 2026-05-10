@@ -250,8 +250,6 @@ public abstract class BaseTomeOfExperience extends Item {
         }
 
         this.updateGlint(itemStack);
-        // FIXME: InteractionResult behaves very differently to how
-        //        TypedActionResult did in 1.21. This is very likely wrong.
         return InteractionResult.SUCCESS;
     }
 
