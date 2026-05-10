@@ -7,59 +7,60 @@ import com.hangbunny.loot.SetExperienceLootFunction;
 import com.hangbunny.loot.SkewedLootNumberProvider;
 
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTables;
-import net.minecraft.loot.condition.RandomChanceLootCondition;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 public class LootTableConfig {
-    protected static final List<RegistryKey<LootTable>> lootContainers = List.of(
-            LootTables.field_472,
-            LootTables.field_38438,
-            LootTables.field_38439,
-            LootTables.field_24048,
-            LootTables.field_24049,
-            LootTables.field_24047,
-            LootTables.field_24046,
-            LootTables.field_251,
-            LootTables.field_885,
-            LootTables.field_274,
-            LootTables.field_662,
-            LootTables.field_803,
-            LootTables.field_751,
-            LootTables.field_615,
-            LootTables.field_16593,
-            LootTables.field_24050,
-            LootTables.field_841,
-            LootTables.field_880,
-            LootTables.field_665,
-            LootTables.field_356,
-            LootTables.SPAWN_BONUS_CHEST,
-            LootTables.field_842,
-            LootTables.field_800,
-            LootTables.field_683,
-            LootTables.field_300,
-            LootTables.field_397,
-            LootTables.VILLAGE_ARMORER_CHEST,
-            LootTables.VILLAGE_BUTCHER_CHEST,
-            LootTables.VILLAGE_CARTOGRAPHER_CHEST,
-            LootTables.VILLAGE_DESERT_HOUSE_CHEST,
-            LootTables.VILLAGE_FISHER_CHEST,
-            LootTables.VILLAGE_FLETCHER_CHEST,
-            LootTables.VILLAGE_MASON_CHEST,
-            LootTables.VILLAGE_PLAINS_CHEST,
-            LootTables.VILLAGE_SAVANNA_HOUSE_CHEST,
-            LootTables.VILLAGE_SHEPARD_CHEST,
-            LootTables.VILLAGE_SNOWY_HOUSE_CHEST,
-            LootTables.VILLAGE_TAIGA_HOUSE_CHEST,
-            LootTables.VILLAGE_TANNERY_CHEST,
-            LootTables.VILLAGE_TEMPLE_CHEST,
-            LootTables.VILLAGE_TOOLSMITH_CHEST,
-            LootTables.VILLAGE_WEAPONSMITH_CHEST,
-            LootTables.field_484);
+    protected static final List<ResourceKey<LootTable>> lootContainers = List.of(
+        BuiltInLootTables.ABANDONED_MINESHAFT,
+        BuiltInLootTables.ANCIENT_CITY,
+        BuiltInLootTables.ANCIENT_CITY_ICE_BOX,
+        BuiltInLootTables.BASTION_BRIDGE,
+        BuiltInLootTables.BASTION_HOGLIN_STABLE,
+        BuiltInLootTables.BASTION_OTHER,
+        BuiltInLootTables.BASTION_TREASURE,
+        BuiltInLootTables.BURIED_TREASURE,
+        BuiltInLootTables.DESERT_PYRAMID,
+        BuiltInLootTables.END_CITY_TREASURE,
+        BuiltInLootTables.IGLOO_CHEST,
+        BuiltInLootTables.JUNGLE_TEMPLE,
+        BuiltInLootTables.NETHER_BRIDGE,
+        BuiltInLootTables.PILLAGER_OUTPOST,
+        BuiltInLootTables.RUINED_PORTAL,
+        BuiltInLootTables.SHIPWRECK_MAP,
+        BuiltInLootTables.SHIPWRECK_SUPPLY,
+        BuiltInLootTables.SHIPWRECK_TREASURE,
+        BuiltInLootTables.STRONGHOLD_CORRIDOR,
+        BuiltInLootTables.STRONGHOLD_CROSSING,
+        BuiltInLootTables.SPAWN_BONUS_CHEST,
+        BuiltInLootTables.STRONGHOLD_LIBRARY,
+        BuiltInLootTables.UNDERWATER_RUIN_BIG,
+        BuiltInLootTables.UNDERWATER_RUIN_SMALL,
+        BuiltInLootTables.WOODLAND_MANSION,
+        BuiltInLootTables.VILLAGE_ARMORER,
+        BuiltInLootTables.VILLAGE_BUTCHER,
+        BuiltInLootTables.VILLAGE_CARTOGRAPHER,
+        BuiltInLootTables.VILLAGE_DESERT_HOUSE,
+        BuiltInLootTables.VILLAGE_FISHER,
+        BuiltInLootTables.VILLAGE_FLETCHER,
+        BuiltInLootTables.VILLAGE_MASON,
+        BuiltInLootTables.VILLAGE_PLAINS_HOUSE,
+        BuiltInLootTables.VILLAGE_SAVANNA_HOUSE,
+        BuiltInLootTables.VILLAGE_SHEPHERD,
+        BuiltInLootTables.VILLAGE_SNOWY_HOUSE,
+        BuiltInLootTables.VILLAGE_TAIGA_HOUSE,
+        BuiltInLootTables.VILLAGE_TANNERY,
+        BuiltInLootTables.VILLAGE_TEMPLE,
+        BuiltInLootTables.VILLAGE_TOOLSMITH,
+        BuiltInLootTables.VILLAGE_WEAPONSMITH,
+        BuiltInLootTables.VILLAGE_SNOWY_HOUSE
+    );
+
 
     public static void init() {
         // Skewed Normal Distribution
@@ -85,71 +86,52 @@ public class LootTableConfig {
         int capacitySuperiorTome = TomesOfExperience.CONFIG.superior_experience_points_capacity;
         int capacityMajorTome = TomesOfExperience.CONFIG.major_experience_points_capacity;
 
-        // Common Tomes
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-            // Only affect vanilla loot tables.
-            if (source.isBuiltin()
-                    && lootContainers.contains(key)) {
-                LootPool.Builder poolBuilder = LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create(1))
-                        .conditionally(RandomChanceLootCondition.builder(lootChanceCommon))
-                        .with(ItemEntry.builder(TomesOfExperience.TomeOfMinorExperience)
-                            .weight(6)
-                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityMinorTome, MEAN, DEVIATION, SKEW, BIAS))))
-                        .with(ItemEntry.builder(TomesOfExperience.TomeOfLesserExperience)
-                            .weight(4)
-                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityLesserTome, MEAN, DEVIATION, SKEW, BIAS))));
+            if (source.isBuiltin() && lootContainers.contains(key)) {
+                
+                // Common Pool
+                tableBuilder.pool(LootPool.lootPool()
+                    .setRolls(ConstantValue.exactly(1))
+                    .when(LootItemRandomChanceCondition.randomChance(lootChanceCommon))
+                    .add(LootItem.lootTableItem(TomesOfExperience.TomeOfMinorExperience)
+                        .setWeight(6)
+                        .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityMinorTome, MEAN, DEVIATION, SKEW, BIAS))))
+                    .add(LootItem.lootTableItem(TomesOfExperience.TomeOfLesserExperience)
+                        .setWeight(4)
+                        .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityLesserTome, MEAN, DEVIATION, SKEW, BIAS))))
+                    .build()
+                );
 
-                tableBuilder.pool(poolBuilder);
-            }
-        });
+                // Uncommon Pool
+                tableBuilder.pool(LootPool.lootPool()
+                    .setRolls(ConstantValue.exactly(1))
+                    .when(LootItemRandomChanceCondition.randomChance(lootChanceUncommon))
+                    .add(LootItem.lootTableItem(TomesOfExperience.TomeOfExperience)
+                        .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityTome, MEAN, DEVIATION, SKEW, BIAS))))
+                    .build()
+                );
 
-        // Uncommon Tomes
-        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-            // Only affect vanilla loot tables.
-            if (source.isBuiltin()
-                    && lootContainers.contains(key)) {
-                LootPool.Builder poolBuilder = LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create(1))
-                        .conditionally(RandomChanceLootCondition.builder(lootChanceUncommon))
-                        .with(ItemEntry.builder(TomesOfExperience.TomeOfExperience)
-                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityTome, MEAN, DEVIATION, SKEW, BIAS))));
+                // Rare Pool
+                tableBuilder.pool(LootPool.lootPool()
+                    .setRolls(ConstantValue.exactly(1))
+                    .when(LootItemRandomChanceCondition.randomChance(lootChanceRare))
+                    .add(LootItem.lootTableItem(TomesOfExperience.TomeOfGreaterExperience)
+                        .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityGreaterTome, MEAN, DEVIATION, SKEW, BIAS))))
+                    .build()
+                );
 
-                tableBuilder.pool(poolBuilder);
-            }
-        });
-
-        // Rare Tomes
-        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-            // Only affect vanilla loot tables.
-            if (source.isBuiltin()
-                    && lootContainers.contains(key)) {
-                LootPool.Builder poolBuilder = LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create(1))
-                        .conditionally(RandomChanceLootCondition.builder(lootChanceRare))
-                        .with(ItemEntry.builder(TomesOfExperience.TomeOfGreaterExperience)
-                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityGreaterTome, MEAN, DEVIATION, SKEW, BIAS))));
-
-                tableBuilder.pool(poolBuilder);
-            }
-        });
-
-        // Epic Tomes
-        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-            // Only affect vanilla loot tables.
-            if (source.isBuiltin()
-                    && lootContainers.contains(key)) {
-                LootPool.Builder poolBuilder = LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create(1))
-                        .conditionally(RandomChanceLootCondition.builder(lootChanceEpic))
-                        .with(ItemEntry.builder(TomesOfExperience.TomeOfSuperiorExperience)
-                            .weight(5)
-                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacitySuperiorTome, MEAN, DEVIATION, SKEW, BIAS))))
-                        .with(ItemEntry.builder(TomesOfExperience.TomeOfMajorExperience)
-                            .weight(1)
-                            .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityMajorTome, MEAN, DEVIATION, SKEW, BIAS))));
-
-                tableBuilder.pool(poolBuilder);
+                // Epic Pool
+                tableBuilder.pool(LootPool.lootPool()
+                    .setRolls(ConstantValue.exactly(1))
+                    .when(LootItemRandomChanceCondition.randomChance(lootChanceEpic))
+                    .add(LootItem.lootTableItem(TomesOfExperience.TomeOfSuperiorExperience)
+                        .setWeight(5)
+                        .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacitySuperiorTome, MEAN, DEVIATION, SKEW, BIAS))))
+                    .add(LootItem.lootTableItem(TomesOfExperience.TomeOfMajorExperience)
+                        .setWeight(1)
+                        .apply(SetExperienceLootFunction.builder(SkewedLootNumberProvider.create(0.0f, (float) capacityMajorTome, MEAN, DEVIATION, SKEW, BIAS))))
+                    .build()    
+                );
             }
         });
     }

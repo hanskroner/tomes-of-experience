@@ -1,32 +1,30 @@
 package com.hangbunny.item;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 import com.hangbunny.TomesOfExperience;
 import com.hangbunny.item.component.TomeComponent;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.Level;
 
 public abstract class BaseTomeOfExperience extends Item {
 
     public static final String EXPERIENCE = "experience";
 
     public BaseTomeOfExperience() { 
-        super(new net.minecraft.item.Item.Settings());
+        super(new Properties());
     }
 
-    public BaseTomeOfExperience(net.minecraft.item.Item.Settings settings) {
-        super(settings);
+    public BaseTomeOfExperience(Properties properties) {
+        super(properties);
     }
 
     // Use accessors for configuration values.
@@ -46,11 +44,11 @@ public abstract class BaseTomeOfExperience extends Item {
 
     // Overridden by the subclasses to control how many
     // experience points are transferred.
-    protected int transferToTome(ItemStack tomeItemStack, PlayerEntity user) {
+    protected int transferToTome(ItemStack tomeItemStack, Player user) {
         return 0;
     }
 
-    protected int transferToPlayer(ItemStack tomeItemStack, PlayerEntity user) {
+    protected int transferToPlayer(ItemStack tomeItemStack, Player user) {
         return 0;
     }
 
@@ -59,22 +57,22 @@ public abstract class BaseTomeOfExperience extends Item {
     }
    
     @Override
-    public ItemStack getDefaultStack() {
-        ItemStack itemStack = super.getDefaultStack();
+    public ItemStack getDefaultInstance() {
+        ItemStack itemStack = super.getDefaultInstance();
         itemStack.set(TomesOfExperience.TOME_DATA, new TomeComponent(0));
 
         return itemStack;
     }
 
     @Override
-    public void onCraft(ItemStack itemStack, World world) {
-        if (world.isClient) { return; }
+    public void onCraftedPostProcess(ItemStack itemStack, Level level) {
+        if (level.isClientSide()) { return; }
 
         itemStack.set(TomesOfExperience.TOME_DATA, new TomeComponent(0));
     }
 
     @Override
-    public void appendTooltip(ItemStack itemStack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag type) {
         TomeComponent tomeComponent = itemStack.getOrDefault(TomesOfExperience.TOME_DATA, TomeComponent.DEFAULT);
         int tomeExperience = tomeComponent.experience();
         if (tomeExperience > 0) {
@@ -85,37 +83,39 @@ public abstract class BaseTomeOfExperience extends Item {
             switch (percentFull) {
                 case 0:
                 case 1:
-                    tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.0-20"));
+                    tooltip.accept(Component.translatable("item.tomes_of_experience.tome_of_experience.tooltip.0-20"));
                     break;
                 case 2:
                 case 3:
-                    tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.20-40"));
+                    tooltip.accept(Component.translatable("item.tomes_of_experience.tome_of_experience.tooltip.20-40"));
                     break;
                 case 4:
                 case 5:
-                    tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.40-60"));
+                    tooltip.accept(Component.translatable("item.tomes_of_experience.tome_of_experience.tooltip.40-60"));
                     break;
                 case 6:
                 case 7:
-                    tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.60-80"));
+                    tooltip.accept(Component.translatable("item.tomes_of_experience.tome_of_experience.tooltip.60-80"));
                     break;
                 case 8:
                 case 9:
-                    tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.80-100"));
+                    tooltip.accept(Component.translatable("item.tomes_of_experience.tome_of_experience.tooltip.80-100"));
                     break; 
                 default:
-                    tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.100"));
+                    tooltip.accept(Component.translatable("item.tomes_of_experience.tome_of_experience.tooltip.100"));
                     break; 
             }
         } else {
-            tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.0"));
+            tooltip.accept(Component.translatable("item.tomes_of_experience.tome_of_experience.tooltip.0"));
         }
 
-        if (Screen.hasShiftDown()) {
-            tooltip.add(Text.translatable("item.tomes_of_experience.tome_of_experience.tooltip.points", tomeExperience, this.getCapacity()));
-        }
+        // FIXME: Screen is missing hasShiftDown()
+        //        Implement this later
+        // if (Screen.hasShiftDown()) {
+        //     tooltip.accept(Component.translatable("item.tomes_of_experience.tome_of_experience.tooltip.points", tomeExperience, this.getCapacity()));
+        // }
 
-        super.appendTooltip(itemStack, context, tooltip, type);
+        super.appendHoverText(itemStack, context, display, tooltip, type);
     }
 
     /**
@@ -194,76 +194,80 @@ public abstract class BaseTomeOfExperience extends Item {
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
+	public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
 
         // Get tome configuration.
         TomeComponent tomeComponent = itemStack.getOrDefault(TomesOfExperience.TOME_DATA, TomeComponent.DEFAULT);
         int pointsTome = tomeComponent.experience();
 
-        if (!world.isClient) {
+        if (!level.isClientSide()) {
             // Split a tome stack if there's more than one tome
             // in it. This mimics the behavior of vanilla stacks.
             if (itemStack.getCount() > 1) {
-                int splitStackSlot = user.getInventory().getEmptySlot();
+                int splitStackSlot = player.getInventory().getFreeSlot();
 
                 ItemStack newItemStack = itemStack.split(itemStack.getCount() - 1);
-                user.getInventory().insertStack(splitStackSlot, newItemStack);
+                player.getInventory().setItem(splitStackSlot, newItemStack);
             }
 
-            if (user.isSneaking()) {
+            if (player.isShiftKeyDown()) {
                 // Enforce the minimum experience level the player must have
                 // to be allowed to transfer experience points to the tome.
-                if (user.experienceLevel < this.getMinimumLevel()) {
-                    return TypedActionResult.pass(itemStack);
+                if (player.experienceLevel < this.getMinimumLevel()) {
+                    return InteractionResult.PASS;
                 }
 
                 // Transfer experience points from the player to the tome.
-                int pointsRemoved = this.transferToTome(itemStack, user);
+                int pointsRemoved = this.transferToTome(itemStack, player);
 
                 if (pointsRemoved == 0) {
-                    return TypedActionResult.pass(itemStack);
+                    return InteractionResult.PASS;
                 }
             } else {
                 // Transfer experience points from the tome to the player.
-                int pointsAdded = this.transferToPlayer(itemStack, user);
+                int pointsAdded = this.transferToPlayer(itemStack, player);
                 if (pointsAdded == 0) {
-                    return TypedActionResult.pass(itemStack);
+                    return InteractionResult.PASS;
                 }
             }
         } else {
-            int pointsToNextLevel = user.getNextLevelExperience();
-            int pointsCurrentLevel = (int) Math.ceil(user.experienceProgress * (float)pointsToNextLevel);
+            int pointsToNextLevel = player.getXpNeededForNextLevel();
+            int pointsCurrentLevel = (int) Math.ceil(player.experienceProgress * (float)pointsToNextLevel);
             // On the client side
             // Don't swing the player's arm when:
             //   The player has no experience points
             //   The tome is either empty or full
             //   No experience points would be transferred in either direction
             //   The player doesn't have the minimum experience level required by the tome
-            boolean canReceivePoints = (pointsTome < this.getCapacity()) && !(user.experienceLevel == 0 && pointsCurrentLevel == 0);
+            boolean canReceivePoints = (pointsTome < this.getCapacity()) && !(player.experienceLevel == 0 && pointsCurrentLevel == 0);
             boolean canProvidePoints = (pointsTome > 0);
-            boolean playerHasPoints = (user.experienceLevel > 0) || (user.experienceProgress > 0);
+            boolean playerHasPoints = (player.experienceLevel > 0) || (player.experienceProgress > 0);
 
-            if ((user.isSneaking() && !playerHasPoints)
-                || (user.isSneaking() && pointsTome >= this.getCapacity())
-                || (user.isSneaking() && !canReceivePoints)
-                || (user.isSneaking() && (user.experienceLevel < this.getMinimumLevel()))
-                || (!user.isSneaking() && pointsTome <= 0)
-                || (!user.isSneaking() && !canProvidePoints)) {
-                return TypedActionResult.pass(itemStack);
+            if ((player.isShiftKeyDown() && !playerHasPoints)
+                || (player.isShiftKeyDown() && pointsTome >= this.getCapacity())
+                || (player.isShiftKeyDown() && !canReceivePoints)
+                || (player.isShiftKeyDown() && (player.experienceLevel < this.getMinimumLevel()))
+                || (!player.isShiftKeyDown() && pointsTome <= 0)
+                || (!player.isShiftKeyDown() && !canProvidePoints)) {
+                return InteractionResult.PASS;
             }
         }
 
-        return TypedActionResult.success(itemStack, world.isClient());
+        // FIXME: InteractionResult behaves very differently to how
+        //        TypedActionResult did in 1.21. This is very likely wrong.
+        return InteractionResult.SUCCESS;
     }
 
-    @Override
-    @Environment(EnvType.CLIENT)
-    public boolean hasGlint(ItemStack itemStack) {
-        // Make the tome glint if it has experience points stored.
-        TomeComponent tomeComponent = itemStack.getOrDefault(TomesOfExperience.TOME_DATA, TomeComponent.DEFAULT);
-        int tomeExperience = tomeComponent.experience();
+    // FIXME: Glint is now handled by the Data Component system
+    //        Comment glint out for now - it'll be implemented later.
+    // @Override
+    // @Environment(EnvType.CLIENT)
+    // public boolean hasGlint(ItemStack itemStack) {
+    //     // Make the tome glint if it has experience points stored.
+    //     TomeComponent tomeComponent = itemStack.getOrDefault(TomesOfExperience.TOME_DATA, TomeComponent.DEFAULT);
+    //     int tomeExperience = tomeComponent.experience();
 
-        return (tomeExperience > 0);
-    }
+    //     return (tomeExperience > 0);
+    // }
 }

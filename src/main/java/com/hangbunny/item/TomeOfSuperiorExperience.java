@@ -1,14 +1,14 @@
 package com.hangbunny.item;
 
 import com.hangbunny.TomesOfExperience;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Rarity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 
 public class TomeOfSuperiorExperience extends BaseTomeOfExperience {
 
-    public TomeOfSuperiorExperience(net.minecraft.item.Item.Settings settings) {
-        super(settings.maxCount(6).rarity(Rarity.field_8904));
+    public TomeOfSuperiorExperience(Properties properties) {
+        super(properties.stacksTo(6).rarity(Rarity.EPIC));
    }
 
     @Override
@@ -27,29 +27,29 @@ public class TomeOfSuperiorExperience extends BaseTomeOfExperience {
     }
 
     @Override
-    protected int transferToTome(ItemStack tomeItemStack, PlayerEntity user) {
+    protected int transferToTome(ItemStack tomeItemStack, Player player) {
         // Transfer the points in the current level plus the points of the two levels
         // before it. Transfer one level at a time in a loop.
         int totalPointsConsumed = 0;
         for (int i = 0; i < 3; i++) {
-            int pointsToNextLevel = user.getNextLevelExperience();
-            int pointsCurrentLevel = (int) Math.ceil(user.experienceProgress * (float)pointsToNextLevel);
+            int pointsToNextLevel = player.getXpNeededForNextLevel();
+            int pointsCurrentLevel = (int) Math.ceil(player.experienceProgress * (float)pointsToNextLevel);
 
             // Transfer all the points in the current level plus
             // a single point to go down to the previous level.
             int pointsToTransfer = pointsCurrentLevel + 1;
 
-            // 'user.totalExperience' doesn't seem to report reliable values.
+            // 'player.totalExperience' doesn't seem to report reliable values.
             // Check that we're not transferring more points than the player has by
             // checking both the level and the points in the current level.
-            if (user.experienceLevel == 0 && pointsToTransfer > pointsCurrentLevel) {
+            if (player.experienceLevel == 0 && pointsToTransfer > pointsCurrentLevel) {
                 pointsToTransfer = pointsCurrentLevel;
             }
 
             // Try to transfer the points to the tome and subtract the amount that
             // could be transferred from the player.
             int pointsConsumed = this.addPointsToTome(tomeItemStack, pointsToTransfer);
-            user.addExperience(-pointsConsumed);
+            player.giveExperiencePoints(-pointsConsumed);
 
             totalPointsConsumed += pointsConsumed;
         }
@@ -58,12 +58,12 @@ public class TomeOfSuperiorExperience extends BaseTomeOfExperience {
     }
 
     @Override
-    protected int transferToPlayer(ItemStack tomeItemStack, PlayerEntity user) {
+    protected int transferToPlayer(ItemStack tomeItemStack, Player player) {
         // Transfer as many points as needed for the player to go up a level.
         // Do this three times to go up a total of three levels.
         int totalPointsTransferred = 0;
         for (int i = 0; i < 3; i++) {
-            int pointsToNextLevel = user.getNextLevelExperience();
+            int pointsToNextLevel = player.getXpNeededForNextLevel();
 
             // Transfer as many points as needed to get to the next level.
             int pointsToTransfer = pointsToNextLevel;
@@ -71,7 +71,7 @@ public class TomeOfSuperiorExperience extends BaseTomeOfExperience {
             // Try to get the points from the tome - or as many as it can provide - and 
             // add that amount to the player.
             int pointsTransferred = this.removePointsFromTome(tomeItemStack, pointsToTransfer);
-            user.addExperience(pointsTransferred);
+            player.giveExperiencePoints(pointsTransferred);
 
             totalPointsTransferred += pointsTransferred;
         }

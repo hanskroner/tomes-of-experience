@@ -5,23 +5,26 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
-import net.minecraft.loot.context.LootContext;
-import net.minecraft.loot.context.LootContextParameter;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.loot.provider.number.LootNumberProvider;
-import net.minecraft.loot.provider.number.LootNumberProviderType;
-import net.minecraft.loot.provider.number.LootNumberProviderTypes;
-import net.minecraft.util.math.MathHelper;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-public class SkewedLootNumberProvider implements LootNumberProvider {
-    final LootNumberProvider min;
-    final LootNumberProvider max;
-    final LootNumberProvider mean;
-    final LootNumberProvider deviation;
-    final LootNumberProvider skew;
-    final LootNumberProvider bias;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
+import net.minecraft.util.context.ContextKey;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 
-    SkewedLootNumberProvider(LootNumberProvider min, LootNumberProvider max, LootNumberProvider mean, LootNumberProvider deviation, LootNumberProvider skew, LootNumberProvider bias) {
+public class SkewedLootNumberProvider implements NumberProvider {
+    final NumberProvider min;
+    final NumberProvider max;
+    final NumberProvider mean;
+    final NumberProvider deviation;
+    final NumberProvider skew;
+    final NumberProvider bias;
+
+    SkewedLootNumberProvider(NumberProvider min, NumberProvider max, NumberProvider mean, NumberProvider deviation, NumberProvider skew, NumberProvider bias) {
         this.min = min;
         this.max = max;
         this.mean = mean;
@@ -30,26 +33,57 @@ public class SkewedLootNumberProvider implements LootNumberProvider {
         this.bias = bias;
     }
 
-    public LootNumberProviderType getType() {
-        return LootNumberProviderTypes.field_27922;
+    public static final MapCodec<SkewedLootNumberProvider> CODEC = RecordCodecBuilder.mapCodec(instance -> 
+        instance.group(
+            NumberProviders.CODEC.fieldOf("min").forGetter(p -> p.min),
+            NumberProviders.CODEC.fieldOf("max").forGetter(p -> p.max),
+            NumberProviders.CODEC.fieldOf("mean").forGetter(p -> p.mean),
+            NumberProviders.CODEC.fieldOf("deviation").forGetter(p -> p.deviation),
+            NumberProviders.CODEC.fieldOf("skew").forGetter(p -> p.skew),
+            NumberProviders.CODEC.fieldOf("bias").forGetter(p -> p.bias)
+        ).apply(instance, SkewedLootNumberProvider::new)
+    );
+
+    @Override
+    public MapCodec<SkewedLootNumberProvider> codec() {
+        return CODEC;
     }
+
+    // @Override
+    // public NumberProviderType getType() {
+    //     return TomesNumberProviderTypes.SKEWED;
+    // }
+
+    // FIXME: Might need to implement this class to register the custom NumberProviderType
+    //        returned in the above, commented out, method.
+    // public class TomesNumberProviderTypes {
+    // public static final NumberProviderType SKEWED = Registry.register(
+    //     BuiltInRegistries.NUMBER_PROVIDER_TYPE,
+    //     ResourceLocation.fromNamespaceAndPath("tomes_of_experience", "skewed"),
+    //     new NumberProviderType(SkewedLootNumberProvider.CODEC)
+    // );
+    // }
 
     public static SkewedLootNumberProvider create(float min, float max, float mean, float deviation, float skew, float bias) {
         return new SkewedLootNumberProvider(
-            ConstantLootNumberProvider.create(min),
-            ConstantLootNumberProvider.create(max),
-            ConstantLootNumberProvider.create(mean),
-            ConstantLootNumberProvider.create(deviation),
-            ConstantLootNumberProvider.create(skew),
-            ConstantLootNumberProvider.create(bias));
+            ConstantValue.exactly(min),
+            ConstantValue.exactly(max),
+            ConstantValue.exactly(mean),
+            ConstantValue.exactly(deviation),
+            ConstantValue.exactly(skew),
+            ConstantValue.exactly(bias));
     }
 
-    public int nextInt(LootContext context) {
-        return MathHelper.nextInt(context.getRandom(), this.min.nextInt(context), this.max.nextInt(context));
+    public int getInt(LootContext context) {
+        return Mth.nextInt(context.getRandom(), this.min.getInt(context), this.max.getInt(context));
     }
 
-    public float nextFloat(LootContext context) {
-        return MathHelper.nextFloat(context.getRandom(), this.min.nextFloat(context), this.max.nextFloat(context));
+    public float getFloat(LootContext context) {
+        return Mth.nextFloat(context.getRandom(), this.min.getFloat(context), this.max.getFloat(context));
+    }
+
+    public static float nextGaussian(RandomSource random, float mean, float deviation) {
+        return (float) (mean + random.nextGaussian() * deviation);
     }
 
     /*
@@ -59,29 +93,30 @@ public class SkewedLootNumberProvider implements LootNumberProvider {
      *          positive values bias toward max, negative values toward min
      */
     public int nextSkewedInt(LootContext context) {
-        float min = this.min.nextInt(context);
-        float max = this.max.nextInt(context);
-        float mean = this.mean.nextInt(context);
-        float deviation = this.deviation.nextInt(context);
-        float skew = this.skew.nextInt(context);
-        float bias = this.bias.nextInt(context);
+        float min = this.min.getInt(context);
+        float max = this.max.getInt(context);
+        float mean = this.mean.getInt(context);
+        float deviation = this.deviation.getInt(context);
+        float skew = this.skew.getInt(context);
+        float bias = this.bias.getInt(context);
 
         float range = max - min;
         float mid = min + range / 2.0f;
-        float unitGaussian = MathHelper.nextGaussian(context.getRandom(), mean, deviation);
+        float unitGaussian = nextGaussian(context.getRandom(), mean, deviation);
         float biasFactor = (float) Math.exp(bias);
 
         return (int) Math.round(mid + (range * (biasFactor / (biasFactor + (float) Math.exp(-unitGaussian / skew)) - 0.5f)));
     }
 
-    public Set<LootContextParameter<?>> getRequiredParameters() {
+    @Override
+    public Set<ContextKey<?>> getReferencedContextParams() {
         return ImmutableSet.copyOf(Iterables.concat(
-            this.min.getRequiredParameters(),
-            this.max.getRequiredParameters(),
-            this.mean.getRequiredParameters(),
-            this.deviation.getRequiredParameters(),
-            this.skew.getRequiredParameters(),
-            this.bias.getRequiredParameters()
+            this.min.getReferencedContextParams(),
+            this.max.getReferencedContextParams(),
+            this.mean.getReferencedContextParams(),
+            this.deviation.getReferencedContextParams(),
+            this.skew.getReferencedContextParams(),
+            this.bias.getReferencedContextParams()
         ));
     }
 }
