@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -248,20 +249,20 @@ public abstract class BaseTomeOfExperience extends Item {
             }
         }
 
+        this.updateGlint(itemStack);
         // FIXME: InteractionResult behaves very differently to how
         //        TypedActionResult did in 1.21. This is very likely wrong.
         return InteractionResult.SUCCESS;
     }
 
-    // FIXME: Glint is now handled by the Data Component system
-    //        Comment glint out for now - it'll be implemented later.
-    // @Override
-    // @Environment(EnvType.CLIENT)
-    // public boolean hasGlint(ItemStack itemStack) {
-    //     // Make the tome glint if it has experience points stored.
-    //     TomeComponent tomeComponent = itemStack.getOrDefault(TomesOfExperience.TOME_DATA, TomeComponent.DEFAULT);
-    //     int tomeExperience = tomeComponent.experience();
+    public void updateGlint(ItemStack stack) {
+        TomeComponent data = stack.get(TomesOfExperience.TOME_DATA);
+        boolean shouldGlint = data != null && data.experience() > 0;
 
-    //     return (tomeExperience > 0);
-    // }
+        if (shouldGlint) {
+            stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+        } else {
+            stack.remove(DataComponents.ENCHANTMENT_GLINT_OVERRIDE);
+        }
+    }
 }
