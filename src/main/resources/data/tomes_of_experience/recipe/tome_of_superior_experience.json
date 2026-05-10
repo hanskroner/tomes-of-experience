@@ -6,20 +6,13 @@
       "GDG"
     ],
     "key": {
-      "G": {
-        "item": "minecraft:gold_nugget"
-      },
-      "T": {
-        "item": "minecraft:ghast_tear"
-      },
-      "D": {
-        "item": "minecraft:diamond"
-      },
-      "B": {
-        "item": "minecraft:enchanted_book"
-      }
+      "G": "minecraft:gold_nugget",
+      "T": "minecraft:ghast_tear",
+      "D": "minecraft:diamond",
+      "B": "minecraft:enchanted_book"
     },
     "result": {
+      "count": 1,
       "id": "tomes_of_experience:tome_of_superior_experience"
     }
   }

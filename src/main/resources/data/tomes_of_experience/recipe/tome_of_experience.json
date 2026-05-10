@@ -1,25 +1,18 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
-      " L ",
-      " BD",
-      " E "
-    ],
-    "key": {
-      "L": {
-        "item": "minecraft:leather"
-      },
-      "D": {
-        "item": "minecraft:diamond"
-      },
-      "E": {
-        "item": "minecraft:ender_pearl"
-      },
-      "B": {
-        "item": "minecraft:book"
-      }
-    },
-    "result": {
-      "id": "tomes_of_experience:tome_of_experience"
-    }
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " L ",
+    " BD",
+    " E "
+  ],
+  "key": {
+    "L": "minecraft:leather",
+    "D": "minecraft:diamond",
+    "E": "minecraft:ender_pearl",
+    "B": "minecraft:book"
+  },
+  "result": {
+    "count": 1,
+    "id": "tomes_of_experience:tome_of_experience"
   }
+}

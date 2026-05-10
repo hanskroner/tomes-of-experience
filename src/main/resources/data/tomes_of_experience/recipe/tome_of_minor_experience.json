@@ -6,14 +6,11 @@
       " R "
     ],
     "key": {
-      "R": {
-        "item": "minecraft:redstone"
-      },
-      "B": {
-        "item": "minecraft:book"
-      }
+      "R": "minecraft:redstone",
+      "B": "minecraft:book"
     },
     "result": {
+      "count": 1,
       "id": "tomes_of_experience:tome_of_minor_experience"
     }
   }

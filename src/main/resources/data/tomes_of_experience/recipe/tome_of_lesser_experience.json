@@ -1,19 +1,16 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
-      " L ",
-      "LBL",
-      " L "
-    ],
-    "key": {
-      "L": {
-        "item": "minecraft:lapis_lazuli"
-      },
-      "B": {
-        "item": "tomes_of_experience:tome_of_minor_experience"
-      }
-    },
-    "result": {
-      "id": "tomes_of_experience:tome_of_lesser_experience"
-    }
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " L ",
+    "LBL",
+    " L "
+  ],
+  "key": {
+    "L": "minecraft:lapis_lazuli",
+    "B": "tomes_of_experience:tome_of_minor_experience"
+  },
+  "result": {
+    "count": 1,
+    "id": "tomes_of_experience:tome_of_lesser_experience"
   }
+}

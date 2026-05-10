@@ -1,25 +1,18 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
-      "G G",
-      "ABA",
-      "GPG"
-    ],
-    "key": {
-      "G": {
-        "item": "minecraft:gold_nugget"
-      },
-      "A": {
-        "item": "minecraft:amethyst_shard"
-      },
-      "P": {
-        "item": "minecraft:blaze_powder"
-      },
-      "B": {
-        "item": "tomes_of_experience:tome_of_experience"
-      }
-    },
-    "result": {
-      "id": "tomes_of_experience:tome_of_greater_experience"
-    }
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "G G",
+    "ABA",
+    "GPG"
+  ],
+  "key": {
+    "G": "minecraft:gold_nugget",
+    "A": "minecraft:amethyst_shard",
+    "P": "minecraft:blaze_powder",
+    "B": "tomes_of_experience:tome_of_experience"
+  },
+  "result": {
+    "count": 1,
+    "id": "tomes_of_experience:tome_of_greater_experience"
   }
+}
